@@ -16,7 +16,7 @@ import { DigitalGiftSection } from "@/components/sections/digital-gift-section"
 import { MusicSection } from "@/components/sections/music-section"
 
 
-export const Route = createFileRoute("/dashboard2")({
+export const Route = createFileRoute("/edit")({
   component: RouteComponent,
 });
 
