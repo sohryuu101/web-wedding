@@ -1,3 +1,9 @@
+import type { ExecutionContext } from '@cloudflare/workers-types';
+
+export interface Env {
+  // Add your environment variables here
+}
+
 export async function createContext({
   req,
   env,
