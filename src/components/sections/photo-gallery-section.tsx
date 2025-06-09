@@ -1,8 +1,6 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Camera, Upload, Plus, Trash2, Grid, List } from "lucide-react"
+import { Camera, Upload, Trash2, Grid, List } from "lucide-react"
 
 export function PhotoGallerySection() {
   return (
