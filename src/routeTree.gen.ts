@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
+import { Route as Dashboard2Import } from './routes/dashboard2'
 import { Route as DashboardImport } from './routes/dashboard'
 import { Route as ContactImport } from './routes/contact'
 import { Route as AboutImport } from './routes/about'
@@ -22,6 +23,12 @@ import { Route as IndexImport } from './routes/index'
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const Dashboard2Route = Dashboard2Import.update({
+  id: '/dashboard2',
+  path: '/dashboard2',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -81,6 +88,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardImport
       parentRoute: typeof rootRoute
     }
+    '/dashboard2': {
+      id: '/dashboard2'
+      path: '/dashboard2'
+      fullPath: '/dashboard2'
+      preLoaderRoute: typeof Dashboard2Import
+      parentRoute: typeof rootRoute
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -98,6 +112,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/dashboard2': typeof Dashboard2Route
   '/login': typeof LoginRoute
 }
 
@@ -106,6 +121,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/dashboard2': typeof Dashboard2Route
   '/login': typeof LoginRoute
 }
 
@@ -115,15 +131,29 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
+  '/dashboard2': typeof Dashboard2Route
   '/login': typeof LoginRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/contact' | '/dashboard' | '/login'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/dashboard'
+    | '/dashboard2'
+    | '/login'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/contact' | '/dashboard' | '/login'
-  id: '__root__' | '/' | '/about' | '/contact' | '/dashboard' | '/login'
+  to: '/' | '/about' | '/contact' | '/dashboard' | '/dashboard2' | '/login'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/dashboard'
+    | '/dashboard2'
+    | '/login'
   fileRoutesById: FileRoutesById
 }
 
@@ -132,6 +162,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
+  Dashboard2Route: typeof Dashboard2Route
   LoginRoute: typeof LoginRoute
 }
 
@@ -140,6 +171,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
+  Dashboard2Route: Dashboard2Route,
   LoginRoute: LoginRoute,
 }
 
@@ -157,6 +189,7 @@ export const routeTree = rootRoute
         "/about",
         "/contact",
         "/dashboard",
+        "/dashboard2",
         "/login"
       ]
     },
@@ -171,6 +204,9 @@ export const routeTree = rootRoute
     },
     "/dashboard": {
       "filePath": "dashboard.tsx"
+    },
+    "/dashboard2": {
+      "filePath": "dashboard2.tsx"
     },
     "/login": {
       "filePath": "login.tsx"
