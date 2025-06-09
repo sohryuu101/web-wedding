@@ -3,7 +3,7 @@ import { GalleryVerticalEnd } from "lucide-react"
 import { LoginForm } from "@/components/login-form"
 
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/login')({
   component: RouteComponent,
 })
 
