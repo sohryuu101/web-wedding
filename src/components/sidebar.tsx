@@ -12,7 +12,14 @@ import {
   Radio,
   Gift,
   Music,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react"
+
+import {
+  IconDashboard
+} from "@tabler/icons-react"
+import { useState } from "react"
 
 interface SidebarProps {
   activeSection: string
@@ -20,6 +27,7 @@ interface SidebarProps {
 }
 
 const menuItems = [
+  {id: "dashboard", label: "Dashboard", icon: IconDashboard },
   { id: "cover", label: "Cover Design", icon: ImageIcon },
   { id: "themes", label: "Themes", icon: Palette },
   { id: "bride-groom", label: "Bride & Groom", icon: Users },
@@ -35,10 +43,25 @@ const menuItems = [
 ]
 
 export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
+  const [isCollapsed, setIsCollapsed] = useState(false)
+
   return (
-    <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-      <div className="p-6">
-        <h2 className="text-lg font-semibold text-gray-900">Dashboard</h2>
+    <div className={cn(
+      "bg-white border-r border-gray-200 flex flex-col transition-all duration-300",
+      isCollapsed ? "w-18" : "w-64"
+    )}>
+      <div className="p-6 flex items-center justify-between">
+        {!isCollapsed && <h2 className="text-lg font-semibold text-gray-900">Editor</h2>}
+        <button
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="p-1 rounded-lg hover:bg-gray-100"
+        >
+          {isCollapsed ? (
+            <ChevronRight className="h-5 w-5 text-gray-600" />
+          ) : (
+            <ChevronLeft className="h-5 w-5 text-gray-600" />
+          )}
+        </button>
       </div>
       <nav className="flex-1 px-4 pb-4">
         <ul className="space-y-2">
@@ -55,8 +78,8 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
                       : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
                   )}
                 >
-                  <Icon className="h-5 w-5 mr-3" />
-                  {item.label}
+                  <Icon className="h-5 w-5" />
+                  {!isCollapsed && <span className="ml-3">{item.label}</span>}
                 </button>
               </li>
             )
