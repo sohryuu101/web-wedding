@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useNavigate } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -45,6 +46,7 @@ interface Invitation {
 }
 
 export function InvitationsDashboard() {
+  const navigate = useNavigate()
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState<string>("all")
   const [showCreateDialog, setShowCreateDialog] = useState(false)
@@ -171,6 +173,10 @@ export function InvitationsDashboard() {
     }
   }
 
+  const handleEdit = (id: string) => {
+    navigate({ to: "/dashboard/edit/$id", params: { id } })
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -260,7 +266,7 @@ export function InvitationsDashboard() {
                         <Eye className="h-4 w-4 mr-2" />
                         Preview
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => handleEdit(invitation.id)}>
                         <Edit className="h-4 w-4 mr-2" />
                         Edit
                       </DropdownMenuItem>
@@ -323,7 +329,7 @@ export function InvitationsDashboard() {
                     <Button variant="outline" size="sm">
                       <Eye className="h-4 w-4" />
                     </Button>
-                    <Button size="sm">
+                    <Button size="sm" onClick={() => handleEdit(invitation.id)}>
                       <Edit className="h-4 w-4" />
                     </Button>
                   </div>
