@@ -12,29 +12,17 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LoginImport } from './routes/login'
-import { Route as EditImport } from './routes/edit'
-import { Route as DashboardImport } from './routes/dashboard'
 import { Route as ContactImport } from './routes/contact'
 import { Route as AboutImport } from './routes/about'
 import { Route as IndexImport } from './routes/index'
+import { Route as DashboardIndexImport } from './routes/dashboard/index'
+import { Route as DashboardEditIdImport } from './routes/dashboard/edit/$id'
 
 // Create/Update Routes
 
 const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const EditRoute = EditImport.update({
-  id: '/edit',
-  path: '/edit',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const DashboardRoute = DashboardImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -53,6 +41,18 @@ const AboutRoute = AboutImport.update({
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardIndexRoute = DashboardIndexImport.update({
+  id: '/dashboard/',
+  path: '/dashboard/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const DashboardEditIdRoute = DashboardEditIdImport.update({
+  id: '/dashboard/edit/$id',
+  path: '/dashboard/edit/$id',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -81,25 +81,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactImport
       parentRoute: typeof rootRoute
     }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardImport
-      parentRoute: typeof rootRoute
-    }
-    '/edit': {
-      id: '/edit'
-      path: '/edit'
-      fullPath: '/edit'
-      preLoaderRoute: typeof EditImport
-      parentRoute: typeof rootRoute
-    }
     '/login': {
       id: '/login'
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardIndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/edit/$id': {
+      id: '/dashboard/edit/$id'
+      path: '/dashboard/edit/$id'
+      fullPath: '/dashboard/edit/$id'
+      preLoaderRoute: typeof DashboardEditIdImport
       parentRoute: typeof rootRoute
     }
   }
@@ -111,18 +111,18 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
-  '/edit': typeof EditRoute
   '/login': typeof LoginRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/edit/$id': typeof DashboardEditIdRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
-  '/edit': typeof EditRoute
   '/login': typeof LoginRoute
+  '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/edit/$id': typeof DashboardEditIdRoute
 }
 
 export interface FileRoutesById {
@@ -130,24 +130,36 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/dashboard': typeof DashboardRoute
-  '/edit': typeof EditRoute
   '/login': typeof LoginRoute
+  '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/edit/$id': typeof DashboardEditIdRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/contact' | '/dashboard' | '/edit' | '/login'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/login'
+    | '/dashboard'
+    | '/dashboard/edit/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/contact' | '/dashboard' | '/edit' | '/login'
+  to:
+    | '/'
+    | '/about'
+    | '/contact'
+    | '/login'
+    | '/dashboard'
+    | '/dashboard/edit/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
     | '/contact'
-    | '/dashboard'
-    | '/edit'
     | '/login'
+    | '/dashboard/'
+    | '/dashboard/edit/$id'
   fileRoutesById: FileRoutesById
 }
 
@@ -155,18 +167,18 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
-  DashboardRoute: typeof DashboardRoute
-  EditRoute: typeof EditRoute
   LoginRoute: typeof LoginRoute
+  DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardEditIdRoute: typeof DashboardEditIdRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
-  DashboardRoute: DashboardRoute,
-  EditRoute: EditRoute,
   LoginRoute: LoginRoute,
+  DashboardIndexRoute: DashboardIndexRoute,
+  DashboardEditIdRoute: DashboardEditIdRoute,
 }
 
 export const routeTree = rootRoute
@@ -182,9 +194,9 @@ export const routeTree = rootRoute
         "/",
         "/about",
         "/contact",
-        "/dashboard",
-        "/edit",
-        "/login"
+        "/login",
+        "/dashboard/",
+        "/dashboard/edit/$id"
       ]
     },
     "/": {
@@ -196,14 +208,14 @@ export const routeTree = rootRoute
     "/contact": {
       "filePath": "contact.tsx"
     },
-    "/dashboard": {
-      "filePath": "dashboard.tsx"
-    },
-    "/edit": {
-      "filePath": "edit.tsx"
-    },
     "/login": {
       "filePath": "login.tsx"
+    },
+    "/dashboard/": {
+      "filePath": "dashboard/index.tsx"
+    },
+    "/dashboard/edit/$id": {
+      "filePath": "dashboard/edit/$id.tsx"
     }
   }
 }

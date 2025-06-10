@@ -15,7 +15,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
-import { useNavigate } from "@tanstack/react-router"
+
 import {
   IconDashboard
 } from "@tabler/icons-react"
@@ -28,23 +28,10 @@ interface SidebarProps {
 
 const menuItems = [
   {id: "dashboard", label: "Dashboard", icon: IconDashboard },
-  { id: "cover", label: "Cover Design", icon: ImageIcon },
-  { id: "themes", label: "Themes", icon: Palette },
-  { id: "bride-groom", label: "Bride & Groom", icon: Users },
-  { id: "event-details", label: "Event Details", icon: Calendar },
-  { id: "quotes", label: "Quotes", icon: Quote },
-  { id: "notifications", label: "Notifications", icon: Bell },
-  { id: "love-story", label: "Love Story", icon: Heart },
-  { id: "photo-gallery", label: "Photo Gallery", icon: Camera },
-  { id: "video-gallery", label: "Video Gallery", icon: Video },
-  { id: "live-streaming", label: "Live Streaming", icon: Radio },
-  { id: "digital-gifts", label: "Digital Gifts", icon: Gift },
-  { id: "music", label: "Music", icon: Music },
 ]
 
-export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
+export function SidebarDashboard({ activeSection, setActiveSection }: SidebarProps) {
   const [isCollapsed, setIsCollapsed] = useState(false)
-  const navigate = useNavigate()
 
   return (
     <div className={cn(
@@ -54,7 +41,7 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
         : "w-64 md:w-64 sm:w-20"
     )}>
       <div className="p-6 flex items-center justify-between">
-        {!isCollapsed && <h2 className="text-lg font-semibold text-gray-900">Editor</h2>}
+        {!isCollapsed && <h2 className="text-lg font-semibold text-gray-900">Wedding Invitation.</h2>}
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
           className="p-1 rounded-lg hover:bg-gray-100"
@@ -73,12 +60,7 @@ export function Sidebar({ activeSection, setActiveSection }: SidebarProps) {
             return (
               <li key={item.id}>
                 <button
-                  onClick={() => {
-                    setActiveSection(item.id)
-                    if (item.id === "dashboard") {
-                      navigate({ to: "/dashboard" })
-                    }
-                  }}
+                  onClick={() => setActiveSection(item.id)}
                   className={cn(
                     "w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors",
                     activeSection === item.id
