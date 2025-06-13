@@ -43,34 +43,6 @@ export function ThemesSection() {
           </Card>
         ))}
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Custom Theme</CardTitle>
-          <CardDescription>Create your own custom color scheme</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Primary Color</label>
-              <input type="color" className="w-full h-10 rounded border" defaultValue="#f43f5e" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Secondary Color</label>
-              <input type="color" className="w-full h-10 rounded border" defaultValue="#ec4899" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Accent Color</label>
-              <input type="color" className="w-full h-10 rounded border" defaultValue="#fbbf24" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Background</label>
-              <input type="color" className="w-full h-10 rounded border" defaultValue="#ffffff" />
-            </div>
-          </div>
-          <Button className="mt-4">Save Custom Theme</Button>
-        </CardContent>
-      </Card>
     </div>
   )
 }

@@ -71,29 +71,6 @@ export function BrideGroomSection() {
           </CardContent>
         </Card>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Couple Information</CardTitle>
-          <CardDescription>Additional details about the couple</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="relationship-start">Relationship Started</Label>
-              <Input id="relationship-start" type="date" />
-            </div>
-            <div>
-              <Label htmlFor="engagement-date">Engagement Date</Label>
-              <Input id="engagement-date" type="date" />
-            </div>
-          </div>
-          <div>
-            <Label htmlFor="couple-story">How We Met</Label>
-            <Textarea id="couple-story" placeholder="Tell the story of how you met..." />
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }

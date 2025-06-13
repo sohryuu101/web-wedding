@@ -53,22 +53,7 @@ export function CoverSection() {
         </Card>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Layout Options</CardTitle>
-          <CardDescription>Choose your cover layout style</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {["Classic", "Modern", "Elegant", "Rustic"].map((style) => (
-              <div key={style} className="border rounded-lg p-4 cursor-pointer hover:border-rose-300 transition-colors">
-                <div className="aspect-[3/4] bg-gray-100 rounded mb-2"></div>
-                <p className="text-sm font-medium text-center">{style}</p>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+      
     </div>
   )
 }
