@@ -4,7 +4,8 @@ import { Button } from "@/components/ui/button"
 import { Play, Video, Heart } from "lucide-react"
 
 export function VideoSection() {
-  const [playingVideo, setPlayingVideo] = useState<string | null>(null)
+  const [playingVideo, setPlayingVideo] =  useState<string | null>(null)
+  console.log(playingVideo)
 
   const videos = [
     {

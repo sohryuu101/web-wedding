@@ -1,17 +1,5 @@
 import { cn } from "@/lib/utils"
 import {
-  ImageIcon,
-  Palette,
-  Users,
-  Calendar,
-  Quote,
-  Bell,
-  Heart,
-  Camera,
-  Video,
-  Radio,
-  Gift,
-  Music,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react"
