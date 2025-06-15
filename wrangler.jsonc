@@ -48,4 +48,12 @@
    * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
    */
   // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }],
+
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "wedding-db",
+      "database_id": "4b499301-06a2-4372-9839-afd610b8394b"
+    }
+  ]
 }
