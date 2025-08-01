@@ -1,20 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, Eye, Users, TrendingUp } from "lucide-react"
-
-interface Invitation {
-  id: string
-  title: string
-  coupleNames: string
-  weddingDate: string
-  status: "draft" | "published" | "archived"
-  theme: string
-  views: number
-  rsvps: number
-  totalGuests: number
-  lastModified: string
-  thumbnail: string
-  template: string
-}
+import { Eye, Heart, Users, TrendingUp } from "lucide-react"
+import { Invitation } from "@/lib/api"
 
 interface InvitationStatsProps {
   invitations: Invitation[]
@@ -22,66 +8,64 @@ interface InvitationStatsProps {
 
 export function InvitationStats({ invitations }: InvitationStatsProps) {
   const totalInvitations = invitations.length
-  const publishedInvitations = invitations.filter((inv) => inv.status === "published").length
-  const draftInvitations = invitations.filter((inv) => inv.status === "draft").length
   const totalViews = invitations.reduce((sum, inv) => sum + inv.views, 0)
-  const totalRSVPs = invitations.reduce((sum, inv) => sum + inv.rsvps, 0)
-  const totalGuests = invitations.reduce((sum, inv) => sum + inv.totalGuests, 0)
+  const totalRsvps = invitations.reduce((sum, inv) => sum + inv.rsvps, 0)
+  const publishedInvitations = invitations.filter(inv => inv.is_published).length
+  
+  // Calculate response rate (RSVPs per view)
+  const responseRate = totalViews > 0 ? ((totalRsvps / totalViews) * 100) : 0
 
   const stats = [
     {
       title: "Total Invitations",
       value: totalInvitations,
       icon: Heart,
+      description: `${publishedInvitations} published`,
       color: "text-rose-600",
-      bgColor: "bg-rose-100",
-      description: `${publishedInvitations} published, ${draftInvitations} drafts`,
+      bgColor: "bg-rose-50",
     },
     {
       title: "Total Views",
-      value: totalViews.toLocaleString(),
+      value: totalViews,
       icon: Eye,
-      color: "text-blue-600",
-      bgColor: "bg-blue-100",
       description: "Across all invitations",
+      color: "text-blue-600",
+      bgColor: "bg-blue-50",
     },
     {
       title: "Total RSVPs",
-      value: totalRSVPs,
+      value: totalRsvps,
       icon: Users,
+      description: "Confirmed responses",
       color: "text-green-600",
-      bgColor: "bg-green-100",
-      description: `${totalGuests} total guests invited`,
+      bgColor: "bg-green-50",
     },
     {
       title: "Response Rate",
-      value: totalGuests > 0 ? `${Math.round((totalRSVPs / totalGuests) * 100)}%` : "0%",
+      value: `${responseRate.toFixed(1)}%`,
       icon: TrendingUp,
+      description: "RSVPs per view",
       color: "text-purple-600",
-      bgColor: "bg-purple-100",
-      description: "Average across all invitations",
+      bgColor: "bg-purple-50",
     },
   ]
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-      {stats.map((stat, index) => {
-        const Icon = stat.icon
-        return (
-          <Card key={index}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">{stat.title}</CardTitle>
-              <div className={`p-2 rounded-full ${stat.bgColor}`}>
-                <Icon className={`h-4 w-4 ${stat.color}`} />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold text-gray-900">{stat.value}</div>
-              <p className="text-xs text-gray-500 mt-1">{stat.description}</p>
-            </CardContent>
-          </Card>
-        )
-      })}
+      {stats.map((stat) => (
+        <Card key={stat.title}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+            <div className={`${stat.bgColor} p-2 rounded-md`}>
+              <stat.icon className={`h-4 w-4 ${stat.color}`} />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stat.value}</div>
+            <p className="text-xs text-muted-foreground">{stat.description}</p>
+          </CardContent>
+        </Card>
+      ))}
     </div>
   )
 }

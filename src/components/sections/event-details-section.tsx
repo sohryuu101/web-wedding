@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Calendar, MapPin, Clock, Plus, Trash2 } from "lucide-react"
+import { Calendar, Clock, Plus, Trash2 } from "lucide-react"
 
 export function EventDetailsSection() {
   return (
@@ -62,7 +62,7 @@ export function EventDetailsSection() {
           <CardDescription>Add pre-wedding events, reception, etc.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {["Engagement Party", "Reception"].map((event, index) => (
+          {["Engagement"].map((event, index) => (
             <div key={index} className="border rounded-lg p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="font-medium">{event}</h4>
@@ -93,35 +93,7 @@ export function EventDetailsSection() {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            <MapPin className="h-5 w-5 mr-2 text-green-500" />
-            Location & Directions
-          </CardTitle>
-          <CardDescription>Help guests find your venue</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label htmlFor="map-embed">Google Maps Embed Code</Label>
-            <Textarea id="map-embed" placeholder="Paste Google Maps embed code here..." />
-          </div>
-          <div>
-            <Label htmlFor="directions">Special Directions</Label>
-            <Textarea id="directions" placeholder="Any special directions or landmarks..." />
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="parking">Parking Information</Label>
-              <Input id="parking" placeholder="Parking details" />
-            </div>
-            <div>
-              <Label htmlFor="contact">Contact Number</Label>
-              <Input id="contact" placeholder="Emergency contact" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      
     </div>
   )
 }

@@ -1,55 +1,53 @@
-DROP TABLE IF EXISTS Customers;
-CREATE TABLE IF NOT EXISTS Customers (CustomerId INTEGER PRIMARY KEY, CompanyName TEXT, ContactName TEXT);
-INSERT INTO Customers (CustomerID, CompanyName, ContactName) VALUES (1, 'Alfreds Futterkiste', 'Maria Anders'), (4, 'Around the Horn', 'Thomas Hardy'), (11, 'Bs Beverages', 'Victoria Ashworth'), (13, 'Bs Beverages', 'Random Name');
-
--- User Table
-CREATE TABLE IF NOT EXISTS user (
-  id TEXT PRIMARY KEY,
+-- Users table
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT UNIQUE NOT NULL,
+  password TEXT NOT NULL,
   name TEXT NOT NULL,
-  email TEXT NOT NULL,
-  emailVerified BOOLEAN NOT NULL DEFAULT 0,
-  image TEXT,
-  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Session Table
-CREATE TABLE IF NOT EXISTS session (
-  id TEXT PRIMARY KEY,
-  userId TEXT NOT NULL,
-  token TEXT NOT NULL,
-  expiresAt DATETIME NOT NULL,
-  ipAddress TEXT,
-  userAgent TEXT,
-  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (userId) REFERENCES user(id)
+-- Invitations table (ONE per user)
+DROP TABLE IF EXISTS invitations;
+CREATE TABLE invitations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER UNIQUE NOT NULL, -- UNIQUE constraint ensures one invitation per user
+  slug TEXT UNIQUE NOT NULL,
+  bride_name TEXT NOT NULL,
+  groom_name TEXT NOT NULL,
+  wedding_date DATE NOT NULL,
+  venue TEXT,
+  cover_image TEXT,
+  main_title TEXT DEFAULT 'Save The Date',
+  subtitle TEXT DEFAULT 'We''re Getting Married!',
+  message TEXT DEFAULT 'Join us for our special day...',
+  theme TEXT DEFAULT 'Rose Garden',
+  is_published BOOLEAN DEFAULT FALSE,
+  views INTEGER DEFAULT 0,
+  rsvps INTEGER DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
--- Account Table
-CREATE TABLE IF NOT EXISTS account (
-  id TEXT PRIMARY KEY,
-  userId TEXT NOT NULL,
-  accountId TEXT NOT NULL,
-  providerId TEXT NOT NULL,
-  accessToken TEXT,
-  refreshToken TEXT,
-  accessTokenExpiresAt DATETIME,
-  refreshTokenExpiresAt DATETIME,
-  scope TEXT,
-  idToken TEXT,
-  password TEXT,
-  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (userId) REFERENCES user(id)
+-- RSVP responses table
+DROP TABLE IF EXISTS rsvp_responses;
+CREATE TABLE rsvp_responses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  invitation_id INTEGER NOT NULL,
+  guest_name TEXT NOT NULL,
+  guest_email TEXT,
+  guest_phone TEXT,
+  attendance TEXT CHECK(attendance IN ('yes', 'no', 'maybe')) NOT NULL,
+  message TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (invitation_id) REFERENCES invitations (id)
 );
 
--- Verification Table
-CREATE TABLE IF NOT EXISTS verification (
-  id TEXT PRIMARY KEY,
-  identifier TEXT NOT NULL,
-  value TEXT NOT NULL,
-  expiresAt DATETIME NOT NULL,
-  createdAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updatedAt DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
-);
+-- Insert test data
+INSERT INTO users (email, password, name) VALUES 
+('demo@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Demo User');
+
+INSERT INTO invitations (user_id, slug, bride_name, groom_name, wedding_date, venue, theme) VALUES 
+(1, 'sarah-john-wedding', 'Sarah Johnson', 'John Smith', '2024-06-15', 'Grand Oak Gardens', 'Rose Garden');
