@@ -36,11 +36,11 @@ uploadRoutes.post('/image', authMiddleware, async (c) => {
       return c.json({ error: 'File must be an image' }, 400);
     }
 
-    // Validate file size (max 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
+    // Validate file size (max 2MB)
+    const maxSize = 2 * 1024 * 1024; // 2MB
     if (file.size > maxSize) {
       console.log('File too large:', file.size);
-      return c.json({ error: 'File size must be less than 5MB' }, 400);
+      return c.json({ error: 'File size must be less than 2MB' }, 400);
     }
 
     // Generate unique filename
