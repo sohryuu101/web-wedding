@@ -119,5 +119,12 @@
   }
   body {
     @apply bg-background text-foreground;
+    /* Prevent horizontal scrolling on mobile */
+    overflow-x: hidden;
+    touch-action: pan-y;
+  }
+  html {
+    /* Prevent horizontal scrolling on mobile */
+    overflow-x: hidden;
   }
 }

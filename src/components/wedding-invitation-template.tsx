@@ -1,8 +1,13 @@
-import { Heart, Calendar, MapPin, Users } from "lucide-react"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { useState } from "react"
+import { HeroSection } from "./sections/hero-section"
+import { ThankYouSection } from "./sections/thank-you-section"
+import { CoupleProfilesSection } from "./sections/couple-profiles-section"
+import { LoveStorySection } from "./sections/love-story-section"
+import { EventDetailsSection } from "./sections/event-details-section"
+import { PhotoGallerySection } from "./sections/photo-gallery-section"
+import { RSVPSection } from "./sections/rsvp-section"
+import { WeddingGiftSection } from "./sections/wedding-gift-section"
 
 export interface InvitationData {
   id: number
@@ -21,12 +26,76 @@ export interface InvitationData {
   rsvps: number
   created_at: string
   updated_at: string
+  // Extended fields for new sections
+  bride_photo?: string
+  groom_photo?: string
+  bride_parents?: {
+    father: string
+    mother: string
+  }
+  groom_parents?: {
+    father: string
+    mother: string
+  }
+  bride_social_media?: {
+    instagram?: string
+  }
+  groom_social_media?: {
+    instagram?: string
+  }
+  bride_birth_order?: 'first' | 'second' | 'third' | 'fourth' | 'fifth'
+  groom_birth_order?: 'first' | 'second' | 'third' | 'fourth' | 'fifth'
+  bride_description?: string
+  groom_description?: string
+  islamic_verse?: string
+  love_story?: Array<{
+    id: string
+    date: string
+    title: string
+    description: string
+    location?: string
+    image?: string
+  }>
+  event_details?: {
+    date: string
+    time: string
+    venue: string
+    address: string
+    google_maps_url?: string
+    dress_code?: string
+    additional_info?: string
+  }
+  photo_gallery?: Array<{
+    id: string
+    src: string
+    alt: string
+    caption?: string
+  }>
+  thank_you_message?: string
+  digital_wallets?: Array<{
+    name: string
+    account_number: string
+    account_name: string
+    qr_code?: string
+  }>
+  bank_accounts?: Array<{
+    name: string
+    account_number: string
+    account_name: string
+    qr_code?: string
+  }>
+  contact_info?: {
+    name: string
+    phone?: string
+    email?: string
+  }
 }
 
 interface WeddingInvitationTemplateProps {
   invitation: InvitationData
   onRSVP?: (rsvpData: RSVPFormData) => void
   isPreview?: boolean
+  guestName?: string
 }
 
 export interface RSVPFormData {
@@ -34,81 +103,24 @@ export interface RSVPFormData {
   guest_email?: string
   guest_phone?: string
   attendance: 'yes' | 'no' | 'maybe'
+  guest_count?: number
+  dietary_requirements?: string
   message?: string
 }
-
-const themeStyles = {
-  "Rose Garden": {
-    primary: "bg-gradient-to-br from-rose-100 to-pink-100",
-    accent: "text-rose-600",
-    button: "bg-rose-600 hover:bg-rose-700",
-    border: "border-rose-200",
-    card: "bg-white/80 backdrop-blur-sm",
-  },
-  "Ocean Breeze": {
-    primary: "bg-gradient-to-br from-blue-100 to-cyan-100",
-    accent: "text-blue-600",
-    button: "bg-blue-600 hover:bg-blue-700",
-    border: "border-blue-200",
-    card: "bg-white/80 backdrop-blur-sm",
-  },
-  "Golden Sunset": {
-    primary: "bg-gradient-to-br from-amber-100 to-orange-100",
-    accent: "text-amber-600",
-    button: "bg-amber-600 hover:bg-amber-700",
-    border: "border-amber-200",
-    card: "bg-white/80 backdrop-blur-sm",
-  },
-  "Forest Green": {
-    primary: "bg-gradient-to-br from-green-100 to-emerald-100",
-    accent: "text-green-600",
-    button: "bg-green-600 hover:bg-green-700",
-    border: "border-green-200",
-    card: "bg-white/80 backdrop-blur-sm",
-  },
-  "Classic Elegance": {
-    primary: "bg-gradient-to-br from-gray-100 to-slate-100",
-    accent: "text-gray-600",
-    button: "bg-gray-600 hover:bg-gray-700",
-    border: "border-gray-200",
-    card: "bg-white/80 backdrop-blur-sm",
-  },
-} as const
 
 export function WeddingInvitationTemplate({ 
   invitation, 
   onRSVP, 
-  isPreview = false 
+  isPreview = false,
+  guestName = "Nama Tamu"
 }: WeddingInvitationTemplateProps) {
   const [showRSVP, setShowRSVP] = useState(false)
-  const [rsvpForm, setRSVPForm] = useState<RSVPFormData>({
-    guest_name: "",
-    guest_email: "",
-    guest_phone: "",
-    attendance: "yes",
-    message: "",
-  })
   const [rsvpSubmitted, setRSVPSubmitted] = useState(false)
 
-  const theme = themeStyles[invitation.theme as keyof typeof themeStyles] || themeStyles["Rose Garden"]
-  const weddingDate = new Date(invitation.wedding_date)
-  const formattedDate = weddingDate.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-  const formattedTime = weddingDate.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
-  })
-
-  const handleRSVPSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleRSVP = async (rsvpData: RSVPFormData) => {
     if (onRSVP && !isPreview) {
       try {
-        await onRSVP(rsvpForm)
+        await onRSVP(rsvpData)
         setRSVPSubmitted(true)
         setShowRSVP(false)
       } catch (error) {
@@ -121,227 +133,244 @@ export function WeddingInvitationTemplate({
     }
   }
 
+  const handleRSVPSection = async (rsvpData: { guestName: string; guestEmail?: string; guestPhone?: string; attendance: 'yes' | 'no' | 'maybe'; guestCount: number; dietaryRequirements?: string; message?: string }) => {
+    // Transform the RSVP data to match the expected format
+    const transformedData: RSVPFormData = {
+      guest_name: rsvpData.guestName,
+      guest_email: rsvpData.guestEmail,
+      guest_phone: rsvpData.guestPhone,
+      attendance: rsvpData.attendance,
+      guest_count: rsvpData.guestCount,
+      dietary_requirements: rsvpData.dietaryRequirements,
+      message: rsvpData.message
+    }
+    await handleRSVP(transformedData)
+  }
+
+  const handleOpenInvitation = () => {
+    // Scroll to the couple profiles section
+    const coupleSection = document.querySelector('section:nth-of-type(2)')
+    if (coupleSection) {
+      coupleSection.scrollIntoView({ behavior: 'smooth' })
+    }
+  }
+
   return (
-    <div className={`min-h-screen ${theme.primary} flex items-center justify-center p-4`}>
-      <div className="max-w-2xl w-full space-y-8">
-        {/* Preview Badge */}
-        {isPreview && (
-          <div className="text-center">
-            <Badge variant="outline" className="text-sm">
-              Preview Mode
-            </Badge>
-          </div>
-        )}
-
-        {/* Main Invitation Card */}
-        <Card className={`${theme.card} ${theme.border} border-2 shadow-2xl overflow-hidden`}>
-          {/* Cover Image Section */}
-          <div className="relative h-64 overflow-hidden">
-            <img
-              src={invitation.cover_image || "/placeholder.svg?height=300&width=600&text=Wedding+Cover"}
-              alt="Wedding Cover"
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-            <div className="absolute bottom-4 left-4 text-white">
-              <p className="text-sm opacity-90">You're Invited</p>
-            </div>
-          </div>
-
-          <CardContent className="p-8 text-center space-y-6">
-            {/* Main Title */}
-            <div className="space-y-2">
-              <h1 className={`text-4xl font-bold ${theme.accent}`}>
-                {invitation.main_title}
-              </h1>
-              <p className="text-xl text-gray-600">
-                {invitation.subtitle}
-              </p>
-            </div>
-
-            {/* Couple Names */}
-            <div className="space-y-4">
-              <div className="flex items-center justify-center space-x-4">
-                <div className="text-center">
-                  <h2 className="text-2xl font-semibold text-gray-800">
-                    {invitation.bride_name}
-                  </h2>
-                  <p className="text-sm text-gray-500">Bride</p>
-                </div>
-                <Heart className={`h-8 w-8 ${theme.accent}`} />
-                <div className="text-center">
-                  <h2 className="text-2xl font-semibold text-gray-800">
-                    {invitation.groom_name}
-                  </h2>
-                  <p className="text-sm text-gray-500">Groom</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Wedding Details */}
-            <div className={`${theme.card} rounded-lg p-6 space-y-4 ${theme.border} border`}>
-              <div className="flex items-center justify-center space-x-2">
-                <Calendar className={`h-5 w-5 ${theme.accent}`} />
-                <div className="text-center">
-                  <p className="font-semibold text-gray-800">{formattedDate}</p>
-                  <p className="text-sm text-gray-600">{formattedTime}</p>
-                </div>
-              </div>
-
-              {invitation.venue && (
-                <div className="flex items-center justify-center space-x-2">
-                  <MapPin className={`h-5 w-5 ${theme.accent}`} />
-                  <p className="text-gray-700">{invitation.venue}</p>
-                </div>
-              )}
-            </div>
-
-            {/* Personal Message */}
-            <div className="space-y-3">
-              <p className="text-gray-700 leading-relaxed">
-                {invitation.message}
-              </p>
-            </div>
-
-            {/* RSVP Section */}
-            {!isPreview && !rsvpSubmitted && (
-              <div className="space-y-4">
-                {!showRSVP ? (
-                  <Button 
-                    onClick={() => setShowRSVP(true)}
-                    className={`${theme.button} text-white px-8 py-3 text-lg`}
-                  >
-                    <Users className="h-5 w-5 mr-2" />
-                    RSVP Now
-                  </Button>
-                ) : (
-                  <Card className="text-left">
-                    <CardContent className="p-6">
-                      <h3 className="text-lg font-semibold mb-4">Please Confirm Your Attendance</h3>
-                      <form onSubmit={handleRSVPSubmit} className="space-y-4">
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Your Name *</label>
-                          <input
-                            type="text"
-                            required
-                            value={rsvpForm.guest_name}
-                            onChange={(e) => setRSVPForm({...rsvpForm, guest_name: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-                            placeholder="Enter your full name"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Email</label>
-                          <input
-                            type="email"
-                            value={rsvpForm.guest_email}
-                            onChange={(e) => setRSVPForm({...rsvpForm, guest_email: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-                            placeholder="your@email.com"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Phone</label>
-                          <input
-                            type="tel"
-                            value={rsvpForm.guest_phone}
-                            onChange={(e) => setRSVPForm({...rsvpForm, guest_phone: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-                            placeholder="Your phone number"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium mb-2">Will you attend? *</label>
-                          <div className="space-y-2">
-                            {[
-                              { value: 'yes', label: '✅ Yes, I will be there!', color: 'text-green-600' },
-                              { value: 'maybe', label: '🤔 Maybe, not sure yet', color: 'text-yellow-600' },
-                              { value: 'no', label: '❌ Sorry, I cannot attend', color: 'text-red-600' },
-                            ].map((option) => (
-                              <label key={option.value} className="flex items-center space-x-2 cursor-pointer">
-                                <input
-                                  type="radio"
-                                  name="attendance"
-                                  value={option.value}
-                                  checked={rsvpForm.attendance === option.value}
-                                  onChange={(e) => setRSVPForm({...rsvpForm, attendance: e.target.value as 'yes' | 'no' | 'maybe'})}
-                                  className="w-4 h-4 text-rose-600"
-                                />
-                                <span className={option.color}>{option.label}</span>
-                              </label>
-                            ))}
-                          </div>
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium mb-1">Message for the couple</label>
-                          <textarea
-                            value={rsvpForm.message}
-                            onChange={(e) => setRSVPForm({...rsvpForm, message: e.target.value})}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-rose-500"
-                            rows={3}
-                            placeholder="Share your wishes for the happy couple..."
-                          />
-                        </div>
-
-                        <div className="flex gap-3">
-                          <Button type="submit" className={`${theme.button} text-white flex-1`}>
-                            Submit RSVP
-                          </Button>
-                          <Button 
-                            type="button" 
-                            variant="outline" 
-                            onClick={() => setShowRSVP(false)}
-                            className="flex-1"
-                          >
-                            Cancel
-                          </Button>
-                        </div>
-                      </form>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-            )}
-
-            {/* RSVP Success Message */}
-            {rsvpSubmitted && (
-              <Card className="bg-green-50 border-green-200">
-                <CardContent className="p-6 text-center">
-                  <div className="text-green-600 mb-2">
-                    <Heart className="h-8 w-8 mx-auto" />
-                  </div>
-                  <h3 className="text-lg font-semibold text-green-800 mb-2">
-                    Thank You for Your RSVP!
-                  </h3>
-                  <p className="text-green-700">
-                    We've received your response and are excited to celebrate with you!
-                  </p>
-                </CardContent>
-              </Card>
-            )}
-
-            {/* Theme & Stats (Preview Mode) */}
-            {isPreview && (
-              <div className="pt-4 border-t border-gray-200">
-                <div className="flex justify-center space-x-6 text-sm text-gray-500">
-                  <span>Theme: {invitation.theme}</span>
-                  <span>Views: {invitation.views}</span>
-                  <span>RSVPs: {invitation.rsvps}</span>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Footer */}
-        <div className="text-center text-sm text-gray-500">
-          <p>Created with ❤️ for {invitation.bride_name} & {invitation.groom_name}</p>
+    <div className="min-h-screen">
+      {/* Preview Badge */}
+      {isPreview && (
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
+          <Badge variant="outline" className="text-sm bg-white/90 backdrop-blur-sm">
+            Preview Mode
+          </Badge>
         </div>
-      </div>
+      )}
+
+      {/* Hero Section */}
+      <HeroSection
+        brideName={invitation.bride_name}
+        groomName={invitation.groom_name}
+        weddingDate={invitation.wedding_date}
+        venue={invitation.venue}
+        coverImage={invitation.cover_image}
+        islamicVerse={invitation.islamic_verse}
+        mainTitle={invitation.main_title}
+        subtitle={invitation.subtitle}
+        guestName={guestName}
+        onOpenInvitation={handleOpenInvitation}
+      />
+
+      {/* Couple Profiles Section */}
+      <CoupleProfilesSection
+        bride={{
+          name: invitation.bride_name,
+          photo: invitation.bride_photo,
+          parents: invitation.bride_parents || { father: '', mother: '' },
+          socialMedia: invitation.bride_social_media,
+          description: invitation.bride_description,
+          birthOrder: invitation.bride_birth_order || 'first',
+          gender: 'female'
+        }}
+        groom={{
+          name: invitation.groom_name,
+          photo: invitation.groom_photo,
+          parents: invitation.groom_parents || { father: '', mother: '' },
+          socialMedia: invitation.groom_social_media,
+          description: invitation.groom_description,
+          birthOrder: invitation.groom_birth_order || 'first',
+          gender: 'male'
+        }}
+      />
+
+      {/* Love Story Section */}
+      <LoveStorySection
+        milestones={invitation.love_story || [
+          {
+            id: "1",
+            date: "2019-10-13",
+            title: "First Meeting",
+            description: "The beginning of our story with a random Tinder match. Calvin messaged first with a flower emoji, leading to a flowing conversation where they felt like they had known each other forever.",
+            location: "Jakarta, Indonesia"
+          },
+          {
+            id: "2",
+            date: "2019-11-16",
+            title: "First Movie Date",
+            description: "Our first movie date, highlighting the quiet magic of being together as more significant than the movie itself.",
+            location: "Jakarta, Indonesia"
+          },
+          {
+            id: "3",
+            date: "2019-12-30",
+            title: "Concert Date",
+            description: "A concert date where we found our rhythm, danced, laughed, and sang, marking it as the start of something special.",
+            location: "Jakarta, Indonesia"
+          },
+          {
+            id: "4",
+            date: "2025-06-21",
+            title: "Forever",
+            description: "We will begin a new chapter as husband and wife. We acknowledge the challenges ahead (uphill climbs and valleys) but emphasize that no journey will ever be too difficult to take as long as we hold each other's hand. This is our story - A love that will last forever.",
+            location: "Jakarta, Indonesia"
+          }
+        ]}
+      />
+
+      {/* Event Details Section */}
+      <EventDetailsSection
+        eventDetails={invitation.event_details || {
+          date: "2025-07-05",
+          time: "16:00",
+          venue: "New Batavia Cafe",
+          address: "Taman Fatahillah No.3, RW.7, Pinangsia, Kec. Taman Sari, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11110",
+          google_maps_url: "https://maps.google.com/?q=New+Batavia+Cafe+Kota+Tua",
+          dress_code: "Formal / Semi-Formal",
+          additional_info: "Please arrive 30 minutes before the ceremony. Parking is available at the venue."
+        }}
+        onRSVP={() => setShowRSVP(true)}
+        rsvpButtonText="RSVP Now"
+      />
+
+      {/* Photo Gallery Section */}
+      <PhotoGallerySection
+        photos={invitation.photo_gallery || [
+          {
+            id: "1",
+            src: "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            alt: "Engagement Photo 1",
+            caption: "Our engagement shoot at Taman Suropati"
+          },
+          {
+            id: "2",
+            src: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            alt: "Engagement Photo 2",
+            caption: "Sunset at Ancol Beach"
+          },
+          {
+            id: "3",
+            src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            alt: "Engagement Photo 3",
+            caption: "Romantic dinner at Skye Bar"
+          },
+          {
+            id: "4",
+            src: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            alt: "Bride Portrait",
+            caption: "Nabila's bridal portrait"
+          },
+          {
+            id: "5",
+            src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            alt: "Groom Portrait",
+            caption: "Calvin's groom portrait"
+          },
+          {
+            id: "6",
+            src: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
+            alt: "Couple Photo",
+            caption: "Together forever"
+          }
+        ]}
+      />
+
+      {/* RSVP Section */}
+      {!isPreview && !rsvpSubmitted && showRSVP && (
+        <RSVPSection
+          onRSVP={handleRSVPSection}
+        />
+      )}
+
+      {/* Wedding Gift Section */}
+      <WeddingGiftSection
+        digitalWallets={invitation.digital_wallets?.map(wallet => ({
+          name: wallet.name,
+          accountNumber: wallet.account_number,
+          accountName: wallet.account_name,
+          qrCode: wallet.qr_code
+        })) || [
+          {
+            name: "GoPay",
+            accountNumber: "081234567890",
+            accountName: "Nabila Khansa Pranajaya"
+          },
+          {
+            name: "OVO",
+            accountNumber: "081234567890",
+            accountName: "Calvin Rahmat Prabowo Nugroho"
+          },
+          {
+            name: "DANA",
+            accountNumber: "081234567890",
+            accountName: "Nabila Khansa Pranajaya"
+          }
+        ]}
+        bankAccounts={invitation.bank_accounts?.map(account => ({
+          name: account.name,
+          accountNumber: account.account_number,
+          accountName: account.account_name,
+          qrCode: account.qr_code
+        })) || [
+          {
+            name: "BCA",
+            accountNumber: "1234567890",
+            accountName: "Nabila Khansa Pranajaya"
+          },
+          {
+            name: "Mandiri",
+            accountNumber: "0987654321",
+            accountName: "Calvin Rahmat Prabowo Nugroho"
+          }
+        ]}
+        contactInfo={invitation.contact_info || {
+          name: "Wedding Organizer",
+          phone: "+62 812-3456-7890",
+          email: "wedding@calvin-nabila.com"
+        }}
+      />
+
+      {/* Thank You Section */}
+      <ThankYouSection
+        bridePhoto={invitation.bride_photo}
+        groomPhoto={invitation.groom_photo}
+        thankYouMessage={invitation.thank_you_message}
+        coupleNames={`${invitation.bride_name} & ${invitation.groom_name}`}
+      />
+
+      {/* Footer */}
+      <footer className="py-8 bg-gray-900 text-white text-center">
+        <div className="max-w-4xl mx-auto px-4">
+          <p className="text-sm text-gray-400">
+            Created with ❤️ for {invitation.bride_name} & {invitation.groom_name}
+          </p>
+          {isPreview && (
+            <div className="mt-4 flex justify-center space-x-6 text-xs text-gray-500">
+              <span>Theme: {invitation.theme}</span>
+              <span>Views: {invitation.views}</span>
+              <span>RSVPs: {invitation.rsvps}</span>
+            </div>
+          )}
+        </div>
+      </footer>
     </div>
   )
 } 

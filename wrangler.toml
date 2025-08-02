@@ -1,0 +1,17 @@
+name = "web-wedding"
+main = "worker/index.ts"
+compatibility_date = "2025-04-10"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = "dist/client"
+not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "wedding-invitation-db"
+database_id = "95d9f653-9d06-4150-8b42-51f4908351b0"
+
+[[r2_buckets]]
+binding = "WEDDING_IMAGES"
+bucket_name = "web-wedding-images" 

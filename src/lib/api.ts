@@ -19,6 +19,28 @@ export interface Invitation {
   message: string;
   theme: string;
   cover_image?: string;
+  // Couple profile fields
+  bride_photo?: string;
+  groom_photo?: string;
+  bride_parents?: {
+    father: string;
+    mother: string;
+  };
+  groom_parents?: {
+    father: string;
+    mother: string;
+  };
+  bride_social_media?: {
+    instagram?: string;
+  };
+  groom_social_media?: {
+    instagram?: string;
+  };
+  bride_birth_order?: 'first' | 'second' | 'third' | 'fourth' | 'fifth';
+  groom_birth_order?: 'first' | 'second' | 'third' | 'fourth' | 'fifth';
+  bride_description?: string;
+  groom_description?: string;
+  cover_video?: string;
   is_published: boolean;
   views: number;
   rsvps: number;
@@ -36,6 +58,28 @@ export interface CreateInvitationData {
   message?: string;
   theme?: string;
   custom_slug?: string;
+  // Couple profile fields
+  bride_photo?: string;
+  groom_photo?: string;
+  bride_parents?: {
+    father: string;
+    mother: string;
+  };
+  groom_parents?: {
+    father: string;
+    mother: string;
+  };
+  bride_social_media?: {
+    instagram?: string;
+  };
+  groom_social_media?: {
+    instagram?: string;
+  };
+  bride_birth_order?: 'first' | 'second' | 'third' | 'fourth' | 'fifth';
+  groom_birth_order?: 'first' | 'second' | 'third' | 'fourth' | 'fifth';
+  bride_description?: string;
+  groom_description?: string;
+  cover_video?: string;
 }
 
 export interface UpdateInvitationData {
@@ -49,6 +93,28 @@ export interface UpdateInvitationData {
   theme?: string;
   cover_image?: string;
   is_published?: boolean;
+  // Couple profile fields
+  bride_photo?: string;
+  groom_photo?: string;
+  bride_parents?: {
+    father: string;
+    mother: string;
+  };
+  groom_parents?: {
+    father: string;
+    mother: string;
+  };
+  bride_social_media?: {
+    instagram?: string;
+  };
+  groom_social_media?: {
+    instagram?: string;
+  };
+  bride_birth_order?: 'first' | 'second' | 'third' | 'fourth' | 'fifth';
+  groom_birth_order?: 'first' | 'second' | 'third' | 'fourth' | 'fifth';
+  bride_description?: string;
+  groom_description?: string;
+  cover_video?: string;
 }
 
 export interface RSVPData {

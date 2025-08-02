@@ -1,9 +1,12 @@
-import type { ExecutionContext, D1Database } from '@cloudflare/workers-types';
+import type { ExecutionContext } from '@cloudflare/workers-types';
 import { verifyJWT, extractTokenFromHeader, type JWTPayload } from '../lib/auth';
 
-export interface Env {
-  DB: D1Database;
-  JWT_SECRET?: string;
+// Use the global Env interface from worker-configuration.d.ts
+declare global {
+  interface Env {
+    WEDDING_IMAGES: any;
+    DB: any;
+  }
 }
 
 export async function createContext({

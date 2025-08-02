@@ -51,6 +51,27 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
     message: "Join us for our special day...",
     theme: "Rose Garden",
     custom_slug: "",
+    // Couple profile fields
+    bride_photo: "",
+    groom_photo: "",
+    bride_parents: {
+      father: "",
+      mother: ""
+    },
+    groom_parents: {
+      father: "",
+      mother: ""
+    },
+    bride_social_media: {
+      instagram: ""
+    },
+    groom_social_media: {
+      instagram: ""
+    },
+    bride_birth_order: "first",
+    groom_birth_order: "first",
+    bride_description: "",
+    groom_description: ""
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
 
@@ -77,6 +98,27 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
       message: "Join us for our special day...",
       theme: "Rose Garden",
       custom_slug: "",
+      // Couple profile fields
+      bride_photo: "",
+      groom_photo: "",
+      bride_parents: {
+        father: "",
+        mother: ""
+      },
+      groom_parents: {
+        father: "",
+        mother: ""
+      },
+      bride_social_media: {
+        instagram: ""
+      },
+      groom_social_media: {
+        instagram: ""
+      },
+      bride_birth_order: "first",
+      groom_birth_order: "first",
+      bride_description: "",
+      groom_description: ""
     })
     setErrors({})
   }
@@ -128,12 +170,22 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
     createMutation.mutate(cleanData)
   }
 
-  const handleInputChange = (field: keyof CreateInvitationData, value: string) => {
+  const handleInputChange = (field: keyof CreateInvitationData, value: string | object) => {
     setFormData(prev => ({ ...prev, [field]: value }))
     // Clear error when user starts typing
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: "" }))
     }
+  }
+
+  const handleNestedInputChange = (parentField: keyof CreateInvitationData, nestedField: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [parentField]: {
+        ...(prev[parentField] as any),
+        [nestedField]: value
+      }
+    }))
   }
 
   return (
@@ -267,6 +319,163 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
             <p className="text-xs text-gray-500">
               This will create a URL like: /invitation/your-custom-url
             </p>
+          </div>
+
+          {/* Couple Profile Section */}
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-4">Couple Profiles</h3>
+            
+            {/* Bride Profile */}
+            <div className="space-y-4 mb-6">
+              <h4 className="text-md font-medium text-pink-600">Bride's Information</h4>
+              
+              <div className="space-y-2">
+                <Label htmlFor="bride_photo">Bride's Photo URL (Optional)</Label>
+                <Input
+                  id="bride_photo"
+                  value={formData.bride_photo}
+                  onChange={(e) => handleInputChange("bride_photo", e.target.value)}
+                  placeholder="https://example.com/bride-photo.jpg"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="bride_father">Bride's Father Name</Label>
+                  <Input
+                    id="bride_father"
+                    value={formData.bride_parents?.father || ""}
+                    onChange={(e) => handleNestedInputChange("bride_parents", "father", e.target.value)}
+                    placeholder="Father's name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="bride_mother">Bride's Mother Name</Label>
+                  <Input
+                    id="bride_mother"
+                    value={formData.bride_parents?.mother || ""}
+                    onChange={(e) => handleNestedInputChange("bride_parents", "mother", e.target.value)}
+                    placeholder="Mother's name"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="bride_birth_order">Bride's Birth Order</Label>
+                <Select 
+                  value={formData.bride_birth_order} 
+                  onValueChange={(value) => handleInputChange("bride_birth_order", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select birth order" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="first">First Child</SelectItem>
+                    <SelectItem value="second">Second Child</SelectItem>
+                    <SelectItem value="third">Third Child</SelectItem>
+                    <SelectItem value="fourth">Fourth Child</SelectItem>
+                    <SelectItem value="fifth">Fifth Child</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="bride_instagram">Bride's Instagram (Optional)</Label>
+                <Input
+                  id="bride_instagram"
+                  value={formData.bride_social_media?.instagram || ""}
+                  onChange={(e) => handleNestedInputChange("bride_social_media", "instagram", e.target.value)}
+                  placeholder="instagram_username"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="bride_description">Bride's Description (Optional)</Label>
+                <Textarea
+                  id="bride_description"
+                  value={formData.bride_description}
+                  onChange={(e) => handleInputChange("bride_description", e.target.value)}
+                  placeholder="Tell us about the bride..."
+                  rows={3}
+                />
+              </div>
+            </div>
+
+            {/* Groom Profile */}
+            <div className="space-y-4">
+              <h4 className="text-md font-medium text-blue-600">Groom's Information</h4>
+              
+              <div className="space-y-2">
+                <Label htmlFor="groom_photo">Groom's Photo URL (Optional)</Label>
+                <Input
+                  id="groom_photo"
+                  value={formData.groom_photo}
+                  onChange={(e) => handleInputChange("groom_photo", e.target.value)}
+                  placeholder="https://example.com/groom-photo.jpg"
+                />
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="groom_father">Groom's Father Name</Label>
+                  <Input
+                    id="groom_father"
+                    value={formData.groom_parents?.father || ""}
+                    onChange={(e) => handleNestedInputChange("groom_parents", "father", e.target.value)}
+                    placeholder="Father's name"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="groom_mother">Groom's Mother Name</Label>
+                  <Input
+                    id="groom_mother"
+                    value={formData.groom_parents?.mother || ""}
+                    onChange={(e) => handleNestedInputChange("groom_parents", "mother", e.target.value)}
+                    placeholder="Mother's name"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="groom_birth_order">Groom's Birth Order</Label>
+                <Select 
+                  value={formData.groom_birth_order} 
+                  onValueChange={(value) => handleInputChange("groom_birth_order", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select birth order" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="first">First Child</SelectItem>
+                    <SelectItem value="second">Second Child</SelectItem>
+                    <SelectItem value="third">Third Child</SelectItem>
+                    <SelectItem value="fourth">Fourth Child</SelectItem>
+                    <SelectItem value="fifth">Fifth Child</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="groom_instagram">Groom's Instagram (Optional)</Label>
+                <Input
+                  id="groom_instagram"
+                  value={formData.groom_social_media?.instagram || ""}
+                  onChange={(e) => handleNestedInputChange("groom_social_media", "instagram", e.target.value)}
+                  placeholder="instagram_username"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="groom_description">Groom's Description (Optional)</Label>
+                <Textarea
+                  id="groom_description"
+                  value={formData.groom_description}
+                  onChange={(e) => handleInputChange("groom_description", e.target.value)}
+                  placeholder="Tell us about the groom..."
+                  rows={3}
+                />
+              </div>
+            </div>
           </div>
 
           <DialogFooter className="gap-2">

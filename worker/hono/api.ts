@@ -3,6 +3,9 @@ import { cors } from "hono/cors";
 import { authRoutes } from "./routes/auth";
 import { invitationRoutes } from "./routes/invitations";
 import { publicRoutes } from "./routes/public";
+import { uploadRoutes } from "./routes/upload";
+import { imageRoutes } from "./routes/images";
+import { testR2Routes } from "./routes/test-r2";
 
 export const app = new Hono<{ Bindings: Env }>();
 
@@ -40,6 +43,15 @@ app.route("/api/auth", authRoutes);
 
 // Mount invitation routes (protected)
 app.route("/api/invitations", invitationRoutes);
+
+// Mount upload routes (protected)
+app.route("/api/upload", uploadRoutes);
+
+// Mount image proxy routes
+app.route("/api/images", imageRoutes);
+
+// Mount test routes
+app.route("/api/test", testR2Routes);
 
 // Mount public routes
 app.route("/api", publicRoutes);

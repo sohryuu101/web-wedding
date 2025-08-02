@@ -78,7 +78,7 @@ export function InvitationsDashboard() {
   }
 
   const handleEdit = () => {
-    navigate({ to: "/dashboard/edit/$id", params: { id: "1" } })
+    navigate({ to: "/dashboard/edit" })
   }
 
   const handleDelete = async () => {
