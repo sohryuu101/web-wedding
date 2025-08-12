@@ -16,21 +16,6 @@ interface CreateInvitationDialogProps {
   onOpenChange: (open: boolean) => void
 }
 
-interface ApiError {
-  message: string;
-}
-
-const themes = [
-  "Taman Mawar",
-  "Angin Laut", 
-  "Senja Keemasan",
-  "Negeri Salju",
-  "Hutan Hijau",
-  "Impian Lavender",
-  "Elegan Klasik",
-  "Minimalis Modern"
-]
-
 export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationDialogProps) {
   const queryClient = useQueryClient()
   const [formData, setFormData] = useState<CreateInvitationData>({
@@ -74,7 +59,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
       resetForm()
       onOpenChange(false)
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       console.error('Create invitation error:', error)
     },
   })
@@ -174,7 +159,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
     setFormData(prev => ({
       ...prev,
       [parentField]: {
-        ...(prev[parentField] as any),
+        ...(prev[parentField] as Record<string, string>),
         [nestedField]: value
       }
     }))
@@ -193,7 +178,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
         <form onSubmit={handleSubmit} className="space-y-6">
           {createMutation.error && (
             <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-              {(createMutation.error as any)?.message || "Gagal membuat undangan"}
+              {(createMutation.error as Error)?.message || "Gagal membuat undangan"}
             </div>
           )}
 
@@ -310,7 +295,6 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
               <div className="space-y-2">
                 <Label htmlFor="bride_photo">Foto Pengantin Wanita</Label>
                 <ImageUpload
-                  id="bride_photo"
                   value={formData.bride_photo}
                   onChange={(url) => handleInputChange("bride_photo", url)}
                   className="w-full aspect-square"
@@ -320,7 +304,6 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
               <div className="space-y-2">
                 <Label htmlFor="groom_photo">Foto Pengantin Pria</Label>
                 <ImageUpload
-                  id="groom_photo"
                   value={formData.groom_photo}
                   onChange={(url) => handleInputChange("groom_photo", url)}
                   className="w-full aspect-square"
@@ -336,7 +319,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
                   <Label htmlFor="bride_father">Nama Ayah</Label>
                   <Input
                     id="bride_father"
-                    value={formData.bride_parents.father}
+                    value={formData.bride_parents?.father || ""}
                     onChange={(e) => handleNestedInputChange("bride_parents", "father", e.target.value)}
                     placeholder="Nama ayah pengantin wanita"
                   />
@@ -345,7 +328,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
                   <Label htmlFor="bride_mother">Nama Ibu</Label>
                   <Input
                     id="bride_mother"
-                    value={formData.bride_parents.mother}
+                    value={formData.bride_parents?.mother || ""}
                     onChange={(e) => handleNestedInputChange("bride_parents", "mother", e.target.value)}
                     placeholder="Nama ibu pengantin wanita"
                   />
@@ -358,7 +341,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
                   <Label htmlFor="groom_father">Nama Ayah</Label>
                   <Input
                     id="groom_father"
-                    value={formData.groom_parents.father}
+                    value={formData.groom_parents?.father || ""}
                     onChange={(e) => handleNestedInputChange("groom_parents", "father", e.target.value)}
                     placeholder="Nama ayah pengantin pria"
                   />
@@ -367,7 +350,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
                   <Label htmlFor="groom_mother">Nama Ibu</Label>
                   <Input
                     id="groom_mother"
-                    value={formData.groom_parents.mother}
+                    value={formData.groom_parents?.mother || ""}
                     onChange={(e) => handleNestedInputChange("groom_parents", "mother", e.target.value)}
                     placeholder="Nama ibu pengantin pria"
                   />
@@ -381,7 +364,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
                 <Label htmlFor="bride_instagram">Instagram Pengantin Wanita</Label>
                 <Input
                   id="bride_instagram"
-                  value={formData.bride_social_media.instagram}
+                  value={formData.bride_social_media?.instagram || ""}
                   onChange={(e) => handleNestedInputChange("bride_social_media", "instagram", e.target.value)}
                   placeholder="@username"
                 />
@@ -390,7 +373,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
                 <Label htmlFor="groom_instagram">Instagram Pengantin Pria</Label>
                 <Input
                   id="groom_instagram"
-                  value={formData.groom_social_media.instagram}
+                  value={formData.groom_social_media?.instagram || ""}
                   onChange={(e) => handleNestedInputChange("groom_social_media", "instagram", e.target.value)}
                   placeholder="@username"
                 />

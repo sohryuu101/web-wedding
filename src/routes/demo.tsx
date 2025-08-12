@@ -7,11 +7,11 @@ export const Route = createFileRoute('/demo')({
 })
 
 function DemoPage() {
-  const handleRSVP = async (rsvpData: RSVPFormData) => {
+  const handleRSVP = async (rsvpData: RSVPFormData): Promise<void> => {
     // Simulate API call
     console.log('RSVP Data:', rsvpData)
-    return new Promise((resolve) => {
-      setTimeout(resolve, 1000)
+    return new Promise<void>((resolve) => {
+      setTimeout(() => resolve(), 1000)
     })
   }
 

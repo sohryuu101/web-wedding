@@ -89,13 +89,20 @@ export const sampleWeddingData: InvitationData = {
   
   // Event Details
   event_details: {
-    date: "2025-07-05",
-    time: "16:00",
-    venue: "New Batavia Cafe",
-    address: "Taman Fatahillah No.3, RW.7, Pinangsia, Kec. Taman Sari, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11110",
-    google_maps_url: "https://maps.google.com/?q=New+Batavia+Cafe+Kota+Tua",
-    dress_code: "Formal / Semi-Formal",
-    additional_info: "Please arrive 30 minutes before the ceremony. Parking is available at the venue."
+    akadNikah: {
+      date: "2025-07-05",
+      time: "08:00",
+      venue: "Masjid Istiqlal",
+      address: "Jl. Taman Wijaya Kusuma, Ps. Baru, Kecamatan Sawah Besar, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10710",
+      googleMapsUrl: "https://maps.google.com/?q=Masjid+Istiqlal+Jakarta"
+    },
+    resepsi: {
+      date: "2025-07-05",
+      time: "16:00",
+      venue: "New Batavia Cafe",
+      address: "Taman Fatahillah No.3, RW.7, Pinangsia, Kec. Taman Sari, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11110",
+      googleMapsUrl: "https://maps.google.com/?q=New+Batavia+Cafe+Kota+Tua"
+    }
   },
   
   // Photo Gallery
@@ -145,32 +152,29 @@ export const sampleWeddingData: InvitationData = {
   digital_wallets: [
     {
       name: "GoPay",
-      account_number: "081234567890",
-      account_name: "Nabila Khansa Pranajaya"
+      number: "081234567890"
     },
     {
       name: "OVO",
-      account_number: "081234567890",
-      account_name: "Calvin Rahmat Prabowo Nugroho"
+      number: "081234567890"
     },
     {
       name: "DANA",
-      account_number: "081234567890",
-      account_name: "Nabila Khansa Pranajaya"
+      number: "081234567890"
     }
   ],
   
   // Bank Accounts
   bank_accounts: [
     {
-      name: "BCA",
-      account_number: "1234567890",
-      account_name: "Nabila Khansa Pranajaya"
+      bank: "BCA",
+      name: "Nabila Khansa Pranajaya",
+      number: "1234567890"
     },
     {
-      name: "Mandiri",
-      account_number: "0987654321",
-      account_name: "Calvin Rahmat Prabowo Nugroho"
+      bank: "Mandiri",
+      name: "Calvin Rahmat Prabowo Nugroho",
+      number: "0987654321"
     }
   ],
   
