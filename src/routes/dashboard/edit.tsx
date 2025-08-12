@@ -4,35 +4,150 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 import { Header } from "@/components/header"
 import { apiClient, type UpdateInvitationData } from "@/lib/api"
-import { WeddingInvitationTemplate } from "@/components/wedding-invitation-template"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Card, CardContent } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog"
 import { ImageUpload } from "@/components/ui/image-upload"
 import { VideoUpload } from "@/components/ui/video-upload"
 import { toast } from "sonner"
+import { 
+  Calendar, 
+  Quote, 
+  Bell, 
+  Heart, 
+  Image as ImageIcon, 
+  Video, 
+  Wifi, 
+  Gift, 
+  Music,
+  Palette,
+  FileText
+} from "lucide-react"
 
 export const Route = createFileRoute("/dashboard/edit")({
   component: RouteComponent,
 });
 
+// Section definitions
+const WEDDING_SECTIONS = [
+  {
+    id: 'cover',
+    title: 'Cover Depan',
+    description: 'Sampul undangan',
+    icon: FileText,
+    color: 'bg-blue-50 hover:bg-blue-100 border-blue-200'
+  },
+  {
+    id: 'cover-video',
+    title: 'Video Latar Sampul',
+    description: 'Video latar belakang',
+    icon: Video,
+    color: 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200'
+  },
+  {
+    id: 'theme',
+    title: 'Ubah Tema',
+    description: 'Pilih tema undangan',
+    icon: Palette,
+    color: 'bg-purple-50 hover:bg-purple-100 border-purple-200'
+  },
+  {
+    id: 'bride',
+    title: 'Mempelai Wanita',
+    description: 'Data pengantin wanita',
+    icon: 'bride.png',
+    color: 'bg-pink-50 hover:bg-pink-100 border-pink-200',
+    isImage: true
+  },
+  {
+    id: 'groom',
+    title: 'Mempelai Pria',
+    description: 'Data pengantin pria',
+    icon: 'groom.png',
+    color: 'bg-blue-50 hover:bg-blue-100 border-blue-200',
+    isImage: true
+  },
+  {
+    id: 'event',
+    title: 'Detail Acara',
+    description: 'Waktu dan tempat',
+    icon: Calendar,
+    color: 'bg-green-50 hover:bg-green-100 border-green-200'
+  },
+  {
+    id: 'quotes',
+    title: 'Quotes',
+    description: 'Kutipan romantis',
+    icon: Quote,
+    color: 'bg-yellow-50 hover:bg-yellow-100 border-yellow-200'
+  },
+  {
+    id: 'notification',
+    title: 'Notifikasi',
+    description: 'Pengaturan pemberitahuan',
+    icon: Bell,
+    color: 'bg-red-50 hover:bg-red-100 border-red-200'
+  },
+  {
+    id: 'love-story',
+    title: 'Love Story',
+    description: 'Cerita cinta',
+    icon: Heart,
+    color: 'bg-pink-50 hover:bg-pink-100 border-pink-200'
+  },
+  {
+    id: 'photo-gallery',
+    title: 'Galleri Foto',
+    description: 'Koleksi foto',
+    icon: ImageIcon,
+    color: 'bg-indigo-50 hover:bg-indigo-100 border-indigo-200'
+  },
+  {
+    id: 'video-gallery',
+    title: 'Gallery Video',
+    description: 'Koleksi video',
+    icon: Video,
+    color: 'bg-cyan-50 hover:bg-cyan-100 border-cyan-200'
+  },
+  {
+    id: 'live-streaming',
+    title: 'Live Streaming',
+    description: 'Siaran langsung',
+    icon: Wifi,
+    color: 'bg-teal-50 hover:bg-teal-100 border-teal-200'
+  },
+  {
+    id: 'digital-gift',
+    title: 'Kado Digital',
+    description: 'Hadiah digital',
+    icon: Gift,
+    color: 'bg-orange-50 hover:bg-orange-100 border-orange-200'
+  },
+  {
+    id: 'music',
+    title: 'Musik',
+    description: 'Lagu latar',
+    icon: Music,
+    color: 'bg-violet-50 hover:bg-violet-100 border-violet-200'
+  }
+]
+
 function RouteComponent() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const [activeTab, setActiveTab] = useState("form")
-  const [formData, setFormData] = useState<UpdateInvitationData>({
+  const [formData, setFormData] = useState<UpdateInvitationData & { event_start_time?: string }>({
     bride_name: "",
     groom_name: "",
     wedding_date: "",
     venue: "",
-    main_title: "Save The Date",
-    subtitle: "We're Getting Married!",
-    message: "Join us for our special day...",
-    theme: "Rose Garden",
+    main_title: "Simpan Tanggal",
+    subtitle: "Kami Akan Menikah!",
+    message: "Bergabunglah bersama kami di hari spesial kami...",
+    theme: "Taman Mawar",
     // Couple profile fields
     bride_photo: "",
     groom_photo: "",
@@ -54,7 +169,8 @@ function RouteComponent() {
     groom_birth_order: "first",
     bride_description: "",
     groom_description: "",
-    cover_video: ""
+    cover_video: "",
+    event_start_time: ""
   })
 
   // Fetch current invitation data
@@ -73,10 +189,10 @@ function RouteComponent() {
         groom_name: invitation.groom_name || "",
         wedding_date: invitation.wedding_date || "",
         venue: invitation.venue || "",
-        main_title: invitation.main_title || "Save The Date",
-        subtitle: invitation.subtitle || "We're Getting Married!",
-        message: invitation.message || "Join us for our special day...",
-        theme: invitation.theme || "Rose Garden",
+        main_title: invitation.main_title || "Simpan Tanggal",
+        subtitle: invitation.subtitle || "Kami Akan Menikah!",
+        message: invitation.message || "Bergabunglah bersama kami di hari spesial kami...",
+        theme: invitation.theme || "Taman Mawar",
                  // Couple profile fields
          bride_photo: invitation.bride_photo || "",
          groom_photo: invitation.groom_photo || "",
@@ -98,15 +214,15 @@ function RouteComponent() {
     mutationFn: (data: UpdateInvitationData) => apiClient.updateInvitation(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['invitation'] })
-      toast.success("Invitation updated successfully!")
+      toast.success("Undangan berhasil diperbarui!")
     },
     onError: (error: any) => {
       console.error('Update invitation error:', error)
-      toast.error("Failed to update invitation")
+      toast.error("Gagal memperbarui undangan")
     },
   })
 
-  const handleInputChange = (field: keyof UpdateInvitationData, value: any) => {
+  const handleInputChange = (field: keyof (UpdateInvitationData & { event_start_time?: string }), value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -123,13 +239,290 @@ function RouteComponent() {
     }))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSave = () => {
     updateMutation.mutate(formData)
   }
 
-  const handleSave = () => {
-    updateMutation.mutate(formData)
+  const renderSectionContent = (sectionId: string) => {
+    switch (sectionId) {
+      case 'cover':
+        return (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="main_title">Judul Undangan *</Label>
+              <Input
+                id="main_title"
+                value={formData.main_title}
+                onChange={(e) => handleInputChange("main_title", e.target.value)}
+                placeholder="Contoh: Simpan Tanggal"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="subtitle">Link Undangan</Label>
+              <Input
+                id="subtitle"
+                value={formData.subtitle}
+                onChange={(e) => handleInputChange("subtitle", e.target.value)}
+                placeholder="Contoh: Kami Akan Menikah!"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="wedding_date">Tanggal Acara</Label>
+              <Input
+                id="wedding_date"
+                type="date"
+                value={formData.wedding_date}
+                onChange={(e) => handleInputChange("wedding_date", e.target.value)}
+                placeholder="Pilih Tanggal Acara"
+              />
+              <p className="text-sm text-gray-500">
+                Pilih Tanggal Acara (misal: 31 Desember 2024)
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="event_start_time">Jam Acara Countdown</Label>
+              <Input
+                id="event_start_time"
+                type="time"
+                value={formData.event_start_time || ""}
+                onChange={(e) => handleInputChange("event_start_time", e.target.value)}
+                placeholder="Masukan Jam Acara Countdown"
+              />
+              <p className="text-sm text-gray-500">
+                Masukan Jam Acara Countdown (misal: 18:30)
+              </p>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="message">Pesan</Label>
+              <Textarea
+                id="message"
+                value={formData.message}
+                onChange={(e) => handleInputChange("message", e.target.value)}
+                placeholder="Pesan pernikahan Anda"
+                rows={4}
+              />
+            </div>
+          </div>
+        )
+
+      case 'cover-video':
+        return (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="cover_video">Video Latar Sampul</Label>
+              <VideoUpload
+                value={formData.cover_video}
+                onChange={(url) => handleInputChange("cover_video", url)}
+              />
+              <p className="text-sm text-gray-500">
+                Masukkan URL YouTube untuk digunakan sebagai latar belakang sampul undangan Anda
+              </p>
+            </div>
+          </div>
+        )
+
+      case 'theme':
+        return (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="theme">Tema</Label>
+              <Select value={formData.theme} onValueChange={(value) => handleInputChange("theme", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Pilih tema" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Taman Mawar">Taman Mawar</SelectItem>
+                  <SelectItem value="Angin Laut">Angin Laut</SelectItem>
+                  <SelectItem value="Senja Keemasan">Senja Keemasan</SelectItem>
+                  <SelectItem value="Negeri Salju">Negeri Salju</SelectItem>
+                  <SelectItem value="Hutan Hijau">Hutan Hijau</SelectItem>
+                  <SelectItem value="Impian Lavender">Impian Lavender</SelectItem>
+                  <SelectItem value="Elegan Klasik">Elegan Klasik</SelectItem>
+                  <SelectItem value="Minimalis Modern">Minimalis Modern</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        )
+
+      case 'bride':
+        return (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="bride_name">Nama Pengantin Wanita</Label>
+              <Input
+                id="bride_name"
+                value={formData.bride_name}
+                onChange={(e) => handleInputChange("bride_name", e.target.value)}
+                placeholder="Nama lengkap pengantin wanita"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bride_photo">Foto Pengantin Wanita</Label>
+              <ImageUpload
+                value={formData.bride_photo}
+                onChange={(url) => handleInputChange("bride_photo", url)}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="bride_father">Nama Ayah</Label>
+                <Input
+                  id="bride_father"
+                  value={formData.bride_parents?.father || ""}
+                  onChange={(e) => handleNestedInputChange("bride_parents", "father", e.target.value)}
+                  placeholder="Nama ayah"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="bride_mother">Nama Ibu</Label>
+                <Input
+                  id="bride_mother"
+                  value={formData.bride_parents?.mother || ""}
+                  onChange={(e) => handleNestedInputChange("bride_parents", "mother", e.target.value)}
+                  placeholder="Nama ibu"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bride_birth_order">Urutan Kelahiran</Label>
+              <Select 
+                value={formData.bride_birth_order} 
+                onValueChange={(value) => handleInputChange("bride_birth_order", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Pilih urutan kelahiran" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="first">Pertama</SelectItem>
+                  <SelectItem value="second">Kedua</SelectItem>
+                  <SelectItem value="third">Ketiga</SelectItem>
+                  <SelectItem value="fourth">Keempat</SelectItem>
+                  <SelectItem value="fifth">Kelima</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="bride_instagram">Akun Instagram</Label>
+              <Input
+                id="bride_instagram"
+                value={formData.bride_social_media?.instagram || ""}
+                onChange={(e) => handleNestedInputChange("bride_social_media", "instagram", e.target.value)}
+                placeholder="@username"
+              />
+            </div>
+            
+          </div>
+        )
+
+      case 'groom':
+        return (
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="groom_name">Nama Pengantin Pria</Label>
+              <Input
+                id="groom_name"
+                value={formData.groom_name}
+                onChange={(e) => handleInputChange("groom_name", e.target.value)}
+                placeholder="Nama lengkap pengantin pria"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="groom_photo">Foto Pengantin Pria</Label>
+              <ImageUpload
+                value={formData.groom_photo}
+                onChange={(url) => handleInputChange("groom_photo", url)}
+              />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="groom_father">Nama Ayah</Label>
+                <Input
+                  id="groom_father"
+                  value={formData.groom_parents?.father || ""}
+                  onChange={(e) => handleNestedInputChange("groom_parents", "father", e.target.value)}
+                  placeholder="Nama ayah"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="groom_mother">Nama Ibu</Label>
+                <Input
+                  id="groom_mother"
+                  value={formData.groom_parents?.mother || ""}
+                  onChange={(e) => handleNestedInputChange("groom_parents", "mother", e.target.value)}
+                  placeholder="Nama ibu"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="groom_birth_order">Urutan Kelahiran</Label>
+              <Select 
+                value={formData.groom_birth_order} 
+                onValueChange={(value) => handleInputChange("groom_birth_order", value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Pilih urutan kelahiran" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="first">Pertama</SelectItem>
+                  <SelectItem value="second">Kedua</SelectItem>
+                  <SelectItem value="third">Ketiga</SelectItem>
+                  <SelectItem value="fourth">Keempat</SelectItem>
+                  <SelectItem value="fifth">Kelima</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="groom_instagram">Akun Instagram</Label>
+              <Input
+                id="groom_instagram"
+                value={formData.groom_social_media?.instagram || ""}
+                onChange={(e) => handleNestedInputChange("groom_social_media", "instagram", e.target.value)}
+                placeholder="@username"
+              />
+            </div>
+            
+          </div>
+        )
+
+      case 'event':
+        return (
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="wedding_date">Tanggal Pernikahan</Label>
+                <Input
+                  id="wedding_date"
+                  type="date"
+                  value={formData.wedding_date}
+                  onChange={(e) => handleInputChange("wedding_date", e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="venue">Tempat</Label>
+                <Input
+                  id="venue"
+                  value={formData.venue}
+                  onChange={(e) => handleInputChange("venue", e.target.value)}
+                  placeholder="Lokasi pernikahan"
+                />
+              </div>
+            </div>
+            <p className="text-sm text-gray-500">
+              Detail acara seperti akad nikah dan resepsi akan ditambahkan dalam pembaruan mendatang.
+            </p>
+          </div>
+        )
+
+      default:
+        return (
+          <div className="text-center py-8">
+            <p className="text-gray-500">
+              Fitur untuk bagian "{WEDDING_SECTIONS.find(s => s.id === sectionId)?.title}" akan segera hadir.
+            </p>
+          </div>
+        )
+    }
   }
 
   if (isLoading) {
@@ -138,7 +531,7 @@ function RouteComponent() {
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900 mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading invitation data...</p>
+            <p className="mt-4 text-gray-600">Memuat data undangan...</p>
           </div>
         </div>
       </div>
@@ -150,9 +543,9 @@ function RouteComponent() {
       <div className="flex h-screen bg-gray-50">
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-red-600">Error loading invitation data</p>
+            <p className="text-red-600">Gagal memuat data undangan</p>
             <Button onClick={() => navigate({ to: "/dashboard" })} className="mt-4">
-              Back to Dashboard
+              Kembali ke Dashboard
             </Button>
           </div>
         </div>
@@ -165,28 +558,14 @@ function RouteComponent() {
       <div className="flex h-screen bg-gray-50">
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center">
-            <p className="text-gray-600">No invitation found</p>
+            <p className="text-gray-600">Undangan tidak ditemukan</p>
             <Button onClick={() => navigate({ to: "/setup" })} className="mt-4">
-              Create Invitation
+              Buat Undangan
             </Button>
           </div>
         </div>
       </div>
     )
-  }
-
-  // Create a mock invitation object for preview
-  const previewInvitation = {
-    ...invitation,
-    ...formData,
-    // Ensure all required fields are present for the template
-    bride_name: formData.bride_name || invitation.bride_name,
-    groom_name: formData.groom_name || invitation.groom_name,
-    wedding_date: formData.wedding_date || invitation.wedding_date,
-    main_title: formData.main_title || invitation.main_title,
-    subtitle: formData.subtitle || invitation.subtitle,
-    message: formData.message || invitation.message,
-    theme: formData.theme || invitation.theme,
   }
 
   return (
@@ -197,315 +576,78 @@ function RouteComponent() {
           <div className="max-w-6xl mx-auto">
             <div className="flex justify-between items-center mb-6">
               <div>
-                <h1 className="text-3xl font-bold text-gray-900">Edit Invitation</h1>
-                <p className="text-gray-600">Update your wedding invitation details</p>
+                <h1 className="text-3xl font-bold text-gray-900">Ubah Undangan</h1>
+                <p className="text-gray-600">Pilih bagian yang ingin Anda ubah</p>
               </div>
               <div className="flex space-x-2">
                 <Button variant="outline" onClick={() => navigate({ to: "/dashboard" })}>
-                  Cancel
+                  Kembali
                 </Button>
-                <Button onClick={handleSave} disabled={updateMutation.isPending}>
-                  {updateMutation.isPending ? "Saving..." : "Save Changes"}
+                <Button onClick={() => navigate({ to: `/invitation/${invitation.slug}` })} variant="outline">
+                  Lihat Undangan
                 </Button>
               </div>
             </div>
 
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="form">Edit Form</TabsTrigger>
-                <TabsTrigger value="preview">Preview</TabsTrigger>
-              </TabsList>
-
-              <TabsContent value="form" className="space-y-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  {/* Basic Information */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Basic Information</CardTitle>
-                      <CardDescription>Update the main details of your invitation</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="bride_name">Bride's Name</Label>
-                          <Input
-                            id="bride_name"
-                            value={formData.bride_name}
-                            onChange={(e) => handleInputChange("bride_name", e.target.value)}
-                            placeholder="Bride's full name"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="groom_name">Groom's Name</Label>
-                          <Input
-                            id="groom_name"
-                            value={formData.groom_name}
-                            onChange={(e) => handleInputChange("groom_name", e.target.value)}
-                            placeholder="Groom's full name"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <Label htmlFor="wedding_date">Wedding Date</Label>
-                          <Input
-                            id="wedding_date"
-                            type="date"
-                            value={formData.wedding_date}
-                            onChange={(e) => handleInputChange("wedding_date", e.target.value)}
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label htmlFor="venue">Venue</Label>
-                          <Input
-                            id="venue"
-                            value={formData.venue}
-                            onChange={(e) => handleInputChange("venue", e.target.value)}
-                            placeholder="Wedding venue"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="main_title">Main Title</Label>
-                        <Input
-                          id="main_title"
-                          value={formData.main_title}
-                          onChange={(e) => handleInputChange("main_title", e.target.value)}
-                          placeholder="e.g., Save The Date"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="subtitle">Subtitle</Label>
-                        <Input
-                          id="subtitle"
-                          value={formData.subtitle}
-                          onChange={(e) => handleInputChange("subtitle", e.target.value)}
-                          placeholder="e.g., We're Getting Married!"
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="message">Message</Label>
-                        <Textarea
-                          id="message"
-                          value={formData.message}
-                          onChange={(e) => handleInputChange("message", e.target.value)}
-                          placeholder="Your wedding message"
-                          rows={4}
-                        />
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="theme">Theme</Label>
-                        <Select value={formData.theme} onValueChange={(value) => handleInputChange("theme", value)}>
-                          <SelectTrigger>
-                            <SelectValue placeholder="Select a theme" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Rose Garden">Rose Garden</SelectItem>
-                            <SelectItem value="Ocean Breeze">Ocean Breeze</SelectItem>
-                            <SelectItem value="Golden Sunset">Golden Sunset</SelectItem>
-                            <SelectItem value="Winter Wonderland">Winter Wonderland</SelectItem>
-                            <SelectItem value="Forest Green">Forest Green</SelectItem>
-                            <SelectItem value="Lavender Dreams">Lavender Dreams</SelectItem>
-                            <SelectItem value="Classic Elegance">Classic Elegance</SelectItem>
-                            <SelectItem value="Modern Minimalist">Modern Minimalist</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="cover_video">Cover Background Video</Label>
-                        <VideoUpload
-                          value={formData.cover_video}
-                          onChange={(url) => handleInputChange("cover_video", url)}
-                        />
-                        <p className="text-sm text-gray-500">
-                          Enter a YouTube URL to use as the background for your invitation cover
-                        </p>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Couple Profile Section */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Couple Profiles</CardTitle>
-                      <CardDescription>Add personal details about the couple</CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      {/* Bride Profile */}
-                      <div className="space-y-4">
-                        <h4 className="text-lg font-medium text-pink-600">Bride's Information</h4>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="bride_photo">Bride's Photo</Label>
-                          <ImageUpload
-                            value={formData.bride_photo}
-                            onChange={(url) => handleInputChange("bride_photo", url)}
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="bride_father">Bride's Father Name</Label>
-                            <Input
-                              id="bride_father"
-                              value={formData.bride_parents?.father || ""}
-                              onChange={(e) => handleNestedInputChange("bride_parents", "father", e.target.value)}
-                              placeholder="Father's name"
-                            />
+            {/* Section Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {WEDDING_SECTIONS.map((section) => {
+                return (
+                  <Dialog key={section.id}>
+                    <DialogTrigger asChild>
+                      <Card className={`cursor-pointer transition-all duration-200 ${section.color} hover:shadow-md`}>
+                        <CardContent className="p-6 text-center">
+                          <div className="mx-auto w-12 h-12 mb-4 flex items-center justify-center">
+                            {section.isImage ? (
+                              <img 
+                                src={`/src/assets/${section.icon}`} 
+                                alt={section.title}
+                                className="h-8 w-8 object-contain"
+                              />
+                            ) : (
+                              <section.icon className="h-8 w-8 text-gray-600" />
+                            )}
                           </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="bride_mother">Bride's Mother Name</Label>
-                            <Input
-                              id="bride_mother"
-                              value={formData.bride_parents?.mother || ""}
-                              onChange={(e) => handleNestedInputChange("bride_parents", "mother", e.target.value)}
-                              placeholder="Mother's name"
+                          <h3 className="font-semibold text-gray-900 mb-1">{section.title}</h3>
+                          <p className="text-sm text-gray-600">{section.description}</p>
+                        </CardContent>
+                      </Card>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                          {section.isImage ? (
+                            <img 
+                              src={`/src/assets/${section.icon}`} 
+                              alt={section.title}
+                              className="h-5 w-5 object-contain"
                             />
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="bride_birth_order">Birth Order</Label>
-                          <Select 
-                            value={formData.bride_birth_order} 
-                            onValueChange={(value) => handleInputChange("bride_birth_order", value)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select birth order" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="first">First</SelectItem>
-                              <SelectItem value="second">Second</SelectItem>
-                              <SelectItem value="third">Third</SelectItem>
-                              <SelectItem value="fourth">Fourth</SelectItem>
-                              <SelectItem value="fifth">Fifth</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="bride_instagram">Instagram Handle</Label>
-                          <Input
-                            id="bride_instagram"
-                            value={formData.bride_social_media?.instagram || ""}
-                            onChange={(e) => handleNestedInputChange("bride_social_media", "instagram", e.target.value)}
-                            placeholder="@username"
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="bride_description">Description</Label>
-                          <Textarea
-                            id="bride_description"
-                            value={formData.bride_description}
-                            onChange={(e) => handleInputChange("bride_description", e.target.value)}
-                            placeholder="Tell us about the bride..."
-                            rows={3}
-                          />
-                        </div>
+                          ) : (
+                            <section.icon className="h-5 w-5" />
+                          )}
+                          {section.title}
+                        </DialogTitle>
+                        <DialogDescription>
+                          {section.description}
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="py-4">
+                        {renderSectionContent(section.id)}
                       </div>
-
-                      {/* Groom Profile */}
-                      <div className="space-y-4">
-                        <h4 className="text-lg font-medium text-blue-600">Groom's Information</h4>
-                        
-                        <div className="space-y-2">
-                          <Label htmlFor="groom_photo">Groom's Photo</Label>
-                          <ImageUpload
-                            value={formData.groom_photo}
-                            onChange={(url) => handleInputChange("groom_photo", url)}
-                          />
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="groom_father">Groom's Father Name</Label>
-                            <Input
-                              id="groom_father"
-                              value={formData.groom_parents?.father || ""}
-                              onChange={(e) => handleNestedInputChange("groom_parents", "father", e.target.value)}
-                              placeholder="Father's name"
-                            />
-                          </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="groom_mother">Groom's Mother Name</Label>
-                            <Input
-                              id="groom_mother"
-                              value={formData.groom_parents?.mother || ""}
-                              onChange={(e) => handleNestedInputChange("groom_parents", "mother", e.target.value)}
-                              placeholder="Mother's name"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="groom_birth_order">Birth Order</Label>
-                          <Select 
-                            value={formData.groom_birth_order} 
-                            onValueChange={(value) => handleInputChange("groom_birth_order", value)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select birth order" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="first">First</SelectItem>
-                              <SelectItem value="second">Second</SelectItem>
-                              <SelectItem value="third">Third</SelectItem>
-                              <SelectItem value="fourth">Fourth</SelectItem>
-                              <SelectItem value="fifth">Fifth</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="groom_instagram">Instagram Handle</Label>
-                          <Input
-                            id="groom_instagram"
-                            value={formData.groom_social_media?.instagram || ""}
-                            onChange={(e) => handleNestedInputChange("groom_social_media", "instagram", e.target.value)}
-                            placeholder="@username"
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="groom_description">Description</Label>
-                          <Textarea
-                            id="groom_description"
-                            value={formData.groom_description}
-                            onChange={(e) => handleInputChange("groom_description", e.target.value)}
-                            placeholder="Tell us about the groom..."
-                            rows={3}
-                          />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </form>
-              </TabsContent>
-
-              <TabsContent value="preview">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Preview</CardTitle>
-                    <CardDescription>See how your invitation will look</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="border rounded-lg overflow-hidden">
-                      <WeddingInvitationTemplate 
-                        invitation={previewInvitation as any}
-                        isPreview={true}
-                      />
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            </Tabs>
+                      <DialogFooter>
+                        <Button 
+                          onClick={handleSave} 
+                          disabled={updateMutation.isPending}
+                          className="w-full"
+                        >
+                          {updateMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                )
+              })}
+            </div>
           </div>
         </main>
       </div>

@@ -55,7 +55,21 @@ export function ImageUpload({
     } catch (error) {
       console.error('Upload error:', error)
       const errorMessage = error instanceof Error ? error.message : 'Upload failed'
-      toast.error(errorMessage)
+      
+      // Check if it's an auth error
+      if (errorMessage.toLowerCase().includes('auth') || errorMessage.includes('401')) {
+        // Clear invalid token and trigger storage event
+        localStorage.removeItem('auth_token');
+        window.dispatchEvent(new StorageEvent('storage', {
+          key: 'auth_token',
+          newValue: null,
+          oldValue: token
+        }));
+        toast.error('Your session has expired. Please log in again.')
+      } else {
+        toast.error(errorMessage)
+      }
+      
       // Remove preview on error
       setPreview('')
       // Clear the file input

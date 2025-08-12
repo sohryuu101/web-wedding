@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Instagram, Crown } from 'lucide-react'
-import { Button } from '@/components/ui/button'
+import { Instagram } from 'lucide-react'
 
 interface ParentInfo {
   father: string
@@ -29,13 +28,13 @@ interface CoupleProfilesSectionProps {
 
 const getBirthOrderText = (order: string, gender: 'male' | 'female') => {
   const orderMap = {
-    first: gender === 'male' ? 'Putra Pertama' : 'Putri Pertama',
-    second: gender === 'male' ? 'Putra Kedua' : 'Putri Kedua',
-    third: gender === 'male' ? 'Putra Ketiga' : 'Putri Ketiga',
-    fourth: gender === 'male' ? 'Putra Keempat' : 'Putri Keempat',
-    fifth: gender === 'male' ? 'Putra Kelima' : 'Putri Kelima'
+    first: gender === 'male' ? 'Son of' : 'Daughter of',
+    second: gender === 'male' ? 'Second Son of' : 'Second Daughter of',
+    third: gender === 'male' ? 'Third Son of' : 'Third Daughter of',
+    fourth: gender === 'male' ? 'Fourth Son of' : 'Fourth Daughter of',
+    fifth: gender === 'male' ? 'Fifth Son of' : 'Fifth Daughter of'
   }
-  return orderMap[order as keyof typeof orderMap] || ''
+  return orderMap[order as keyof typeof orderMap] || 'Son of'
 }
 
 export function CoupleProfilesSection({ bride, groom }: CoupleProfilesSectionProps) {
@@ -45,166 +44,93 @@ export function CoupleProfilesSection({ bride, groom }: CoupleProfilesSectionPro
   })
 
   return (
-    <section ref={ref} className="py-20 bg-gray-900 text-white">
-      <div className="max-w-6xl mx-auto px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Crown className="h-6 w-6 text-yellow-400" />
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-serif">
-              Meet the Couple
-            </h2>
-            <Crown className="h-6 w-6 text-yellow-400" />
-          </div>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
-            Two hearts, one love story
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
-          {/* Bride Profile */}
+    <>
+      {/* Bride Page */}
+      <section ref={ref} className="min-h-screen bg-black text-white relative overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat filter grayscale"
+          style={{
+            backgroundImage: `url(${bride.photo || '/placeholder.svg'})`,
+          }}
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        
+        <div className="relative z-10 min-h-screen flex flex-col justify-between p-8">
+          {/* Header */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative"
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8 }}
+            className="text-center pt-16"
           >
-            <div className="bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-700">
-              {/* Photo Section */}
-              <div className="relative h-80 overflow-hidden">
-                <img
-                  src={bride.photo || '/placeholder.svg'}
-                  alt={`${bride.name} - Bride`}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute top-4 right-4 bg-pink-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  Bride
-                </div>
-              </div>
-
-              {/* Content Section */}
-              <div className="p-8 bg-gray-800">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                    {bride.name}
-                  </h3>
-                  {bride.birthOrder && (
-                    <p className="text-sm text-gray-400 mb-2">
-                      {getBirthOrderText(bride.birthOrder, bride.gender)} dari
-                    </p>
-                  )}
-                  {(bride.parents.father || bride.parents.mother) && (
-                    <div className="text-gray-300">
-                      {bride.parents.father && <p className="font-medium">{bride.parents.father}</p>}
-                      {bride.parents.father && bride.parents.mother && <p className="text-sm">&</p>}
-                      {bride.parents.mother && <p className="font-medium">{bride.parents.mother}</p>}
-                    </div>
-                  )}
-                </div>
-
-                {bride.description && (
-                  <p className="text-gray-400 text-center mb-6 leading-relaxed">
-                    {bride.description}
-                  </p>
-                )}
-
-                {bride.socialMedia?.instagram && (
-                  <div className="text-center">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.open(`https://instagram.com/${bride.socialMedia!.instagram}`, '_blank')}
-                      className="border-pink-500 text-pink-400 hover:bg-pink-500 hover:text-white"
-                    >
-                      <Instagram className="h-4 w-4 mr-2" />
-                      {bride.socialMedia!.instagram}
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </div>
+            <h2 className="text-2xl md:text-3xl font-serif text-white/90 mb-4 font-light tracking-wider">
+              The pleasure of your company is requested at the
+            </h2>
+            <h3 className="text-xl md:text-2xl font-serif text-white/90 font-light tracking-wider">
+              marriage of
+            </h3>
           </motion.div>
 
-          {/* Groom Profile */}
+          {/* Bride Name */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="relative"
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-center flex-1 flex flex-col justify-end pb-32"
           >
-            <div className="bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-700">
-              {/* Photo Section */}
-              <div className="relative h-80 overflow-hidden">
-                <img
-                  src={groom.photo || '/placeholder.svg'}
-                  alt={`${groom.name} - Groom`}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-                <div className="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  Groom
+            <div className="border-b border-white/30 w-64 mx-auto mb-8"></div>
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif text-white mb-4 font-light">
+              The Bride
+            </h1>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Groom Page */}
+      <section className="min-h-screen bg-black text-white relative overflow-hidden">
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat filter grayscale"
+          style={{
+            backgroundImage: `url(${groom.photo || '/placeholder.svg'})`,
+          }}
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        
+        <div className="relative z-10 min-h-screen flex flex-col justify-center items-center p-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="space-y-8"
+          >
+            <div className="border-b border-white/30 w-64 mx-auto"></div>
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif text-white font-light">
+              The Groom
+            </h1>
+            <div className="bg-white/10 backdrop-blur-sm rounded-none px-8 py-6 max-w-md mx-auto">
+              <h2 className="text-2xl md:text-3xl font-serif text-white mb-4 font-light">
+                {groom.name}
+              </h2>
+              <p className="text-base md:text-lg text-white/80 mb-2 font-light">
+                {getBirthOrderText(groom.birthOrder || 'first', groom.gender)}
+              </p>
+              {(groom.parents.father || groom.parents.mother) && (
+                <div className="text-white/90 space-y-1">
+                  {groom.parents.father && <p className="font-light">{groom.parents.father}</p>}
+                  {groom.parents.father && groom.parents.mother && <p className="text-sm">&</p>}
+                  {groom.parents.mother && <p className="font-light">{groom.parents.mother}</p>}
                 </div>
-              </div>
-
-              {/* Content Section */}
-              <div className="p-8 bg-gray-800">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
-                    {groom.name}
-                  </h3>
-                  {groom.birthOrder && (
-                    <p className="text-sm text-gray-400 mb-2">
-                      {getBirthOrderText(groom.birthOrder, groom.gender)} dari
-                    </p>
-                  )}
-                  {(groom.parents.father || groom.parents.mother) && (
-                    <div className="text-gray-300">
-                      {groom.parents.father && <p className="font-medium">{groom.parents.father}</p>}
-                      {groom.parents.father && groom.parents.mother && <p className="text-sm">&</p>}
-                      {groom.parents.mother && <p className="font-medium">{groom.parents.mother}</p>}
-                    </div>
-                  )}
+              )}
+              {groom.socialMedia?.instagram && (
+                <div className="mt-4 flex items-center justify-center space-x-2">
+                  <Instagram className="h-4 w-4" />
+                  <span className="text-sm">@{groom.socialMedia.instagram}</span>
                 </div>
-
-                {groom.description && (
-                  <p className="text-gray-400 text-center mb-6 leading-relaxed">
-                    {groom.description}
-                  </p>
-                )}
-
-                {groom.socialMedia?.instagram && (
-                  <div className="text-center">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => window.open(`https://instagram.com/${groom.socialMedia!.instagram}`, '_blank')}
-                      className="border-blue-500 text-blue-400 hover:bg-blue-500 hover:text-white"
-                    >
-                      <Instagram className="h-4 w-4 mr-2" />
-                      {groom.socialMedia!.instagram}
-                    </Button>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           </motion.div>
         </div>
-
-        {/* Connecting Hearts */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={inView ? { opacity: 1, scale: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="text-center mt-12"
-        >
-        
-        </motion.div>
-      </div>
-    </section>
+      </section>
+    </>
   )
 } 

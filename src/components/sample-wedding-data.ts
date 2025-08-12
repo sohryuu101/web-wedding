@@ -7,10 +7,10 @@ export const sampleWeddingData: InvitationData = {
   groom_name: "Calvin Rahmat Prabowo Nugroho",
   wedding_date: "2025-07-05T16:00:00",
   venue: "New Batavia Cafe, Kota Tua",
-  main_title: "THE WEDDING OF",
+  main_title: "PERNIKAHAN",
   subtitle: "Calvin & Nabila",
-  message: "We are delighted to invite you to celebrate our special day with us. Your presence would mean the world to us as we begin this beautiful journey together.",
-  theme: "Rose Garden",
+  message: "Dengan penuh kebahagiaan, kami mengundang Anda untuk merayakan hari istimewa kami. Kehadiran Anda sangat berarti bagi kami saat kami memulai perjalanan indah ini bersama.",
+  theme: "Taman Mawar",
   cover_image: "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   is_published: true,
   views: 1250,
@@ -18,11 +18,11 @@ export const sampleWeddingData: InvitationData = {
   created_at: "2024-01-15T10:00:00",
   updated_at: "2024-11-01T15:30:00",
   
-  // Bride and Groom Photos
+  // Foto Pengantin
   bride_photo: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
   groom_photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
   
-  // Parents Information
+  // Informasi Orang Tua
   bride_parents: {
     father: "Bapak Denie Fajar Pranajaya",
     mother: "Ibu IYos Mina Farlina"
@@ -32,7 +32,7 @@ export const sampleWeddingData: InvitationData = {
     mother: "Ibu Daryani Tri Ratna Ningtyas"
   },
   
-  // Social Media
+  // Media Sosial
   bride_social_media: {
     instagram: "Nabila"
   },
@@ -40,16 +40,16 @@ export const sampleWeddingData: InvitationData = {
     instagram: "Calvin"
   },
   
-  // Birth Order
+  // Urutan Kelahiran
   bride_birth_order: "first",
   groom_birth_order: "first",
   
-  // Descriptions
-  bride_description: "A compassionate soul who loves to help others. She graduated from Universitas Indonesia with a degree in Psychology and works as a counselor.",
-  groom_description: "A dedicated professional with a heart of gold. He completed his MBA from Institut Teknologi Bandung and works in sustainable development.",
+  // Deskripsi
+  bride_description: "Jiwa yang penuh kasih yang senang membantu orang lain. Dia lulus dari Universitas Indonesia dengan gelar Psikologi dan bekerja sebagai konselor.",
+  groom_description: "Seorang profesional yang berdedikasi dengan hati yang mulia. Dia menyelesaikan MBA dari Institut Teknologi Bandung dan bekerja di bidang pembangunan berkelanjutan.",
   
-  // Islamic Verse
-  islamic_verse: "Hai manusia, bertakwalah kepada Tuhan-mu Yang menciptakan kamu dari satu jiwa dan darinya Dia menciptakan jodohnya, dan mengembang-biakan dari keduanya banyak laki-laki dan perempuan; dan bertakwalah kepada Allah SWT yang dengan nama-Nya kamu saling bertanya, terutama mengenai hubungan tali kekerabatan. Sesungguhnya Allah SWT adalah pengawas atas kamu. (QS An-Nisa: 1)",
+  // Ayat Al-Quran
+  islamic_verse: "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu isteri-isteri dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya diantaramu rasa kasih dan sayang. Sesungguhnya pada yang demikian itu benar-benar terdapat tanda-tanda bagi kaum yang berfikir. (QS Ar-Rum: 21)",
   
   // Love Story
   love_story: [

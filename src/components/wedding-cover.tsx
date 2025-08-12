@@ -27,7 +27,7 @@ export function WeddingCover() {
         <div className="p-12 text-center space-y-8">
           {/* Save the Date */}
           <div className="space-y-2">
-            <p className="text-rose-600 font-medium tracking-widest uppercase text-sm">Save The Date</p>
+            <p className="text-rose-600 font-medium tracking-widest uppercase text-sm">Simpan Tanggal</p>
             <div className="w-24 h-px bg-rose-300 mx-auto"></div>
           </div>
 
@@ -43,7 +43,7 @@ export function WeddingCover() {
           {/* Quote */}
           <div className="space-y-4">
             <p className="text-lg text-gray-600 italic font-light leading-relaxed">
-              "Two souls with but a single thought, two hearts that beat as one"
+              "Dua jiwa dengan satu pemikiran, dua hati yang berdetak sebagai satu"
             </p>
           </div>
 
@@ -51,7 +51,7 @@ export function WeddingCover() {
           <div className="space-y-6 pt-4">
             <div className="flex items-center justify-center space-x-3 text-gray-700">
               <Calendar className="h-5 w-5 text-rose-500" />
-              <span className="text-lg font-medium">June 15th, 2024</span>
+              <span className="text-lg font-medium">15 Juni 2024</span>
             </div>
             <div className="flex items-center justify-center space-x-3 text-gray-700">
               <MapPin className="h-5 w-5 text-rose-500" />
@@ -65,7 +65,7 @@ export function WeddingCover() {
               size="lg"
               className="bg-rose-500 hover:bg-rose-600 text-white px-8 py-3 rounded-full font-medium tracking-wide"
             >
-              View Our Invitation
+              Lihat Undangan Kami
             </Button>
           </div>
         </div>

@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from 'date-fns'
 import { Button } from '@/components/ui/button'
-import { Calendar, MapPin, Mail } from 'lucide-react'
 
 interface HeroSectionProps {
   brideName: string
@@ -10,7 +9,7 @@ interface HeroSectionProps {
   weddingDate: string
   venue?: string
   coverImage?: string
-  islamicVerse?: string
+  islamicVerse?: { arabic: string; translation: string; source: string }
   mainTitle: string
   subtitle: string
   guestName?: string
@@ -28,11 +27,7 @@ export function HeroSection({
   brideName,
   groomName,
   weddingDate,
-  venue,
   coverImage,
-  islamicVerse,
-  mainTitle,
-  guestName = "Nama Tamu",
   onOpenInvitation
 }: HeroSectionProps) {
   const [countdown, setCountdown] = useState<CountdownTime>({
@@ -70,21 +65,23 @@ export function HeroSection({
     }
   }
 
+  const { days, hours, minutes, seconds } = countdown
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
+      {/* Background Image with grayscale filter */}
       <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat filter grayscale"
         style={{
           backgroundImage: `url(${coverImage || '/placeholder.svg'})`,
         }}
       />
       
-      {/* Dark Overlay for readability */}
-      <div className="absolute inset-0 bg-black/60" />
+      {/* Dark Overlay */}
+      <div className="absolute inset-0 bg-black/70" />
       
       {/* Main Content */}
-      <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
+      <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto flex-1 flex flex-col justify-center">
         {/* Main Title */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -92,129 +89,76 @@ export function HeroSection({
           transition={{ duration: 0.8 }}
           className="mb-8"
         >
-          <h1 className="text-2xl md:text-4xl font-serif text-white/90 mb-4">
-            {mainTitle}
+          <h1 className="text-2xl md:text-3xl font-serif text-white/90 mb-8 font-light tracking-wider">
+            The Wedding Of
           </h1>
-          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6">
-            {brideName} & {groomName}
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-4 font-light">
+            {brideName} &
           </h2>
-        </motion.div>
-
-        {/* Guest Name */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="mb-8"
-        >
-          <p className="text-xl md:text-2xl font-serif text-white/80 mb-2">
-            DEAR
-          </p>
-          <p className="text-2xl md:text-3xl font-semibold text-white">
-            {guestName}
+          <h2 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-12 font-light">
+            {groomName}
+          </h2>
+          <p className="text-xl md:text-2xl font-serif text-white/90 font-light tracking-wide">
+            {new Date(weddingDate).toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
           </p>
         </motion.div>
-
-        {/* Countdown Timer */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mb-12"
-        >
-          <div className="grid grid-cols-4 gap-4 md:gap-8 max-w-2xl mx-auto">
-            {[
-              { label: 'Hari', value: countdown.days },
-              { label: 'Jam', value: countdown.hours },
-              { label: 'Menit', value: countdown.minutes },
-              { label: 'Detik', value: countdown.seconds }
-            ].map((item) => (
-              <div key={item.label} className="text-center">
-                <div className="bg-white/10 backdrop-blur-sm rounded-lg p-4 border border-white/20">
-                  <div className="text-2xl md:text-4xl font-bold mb-1">
-                    {item.value.toString().padStart(2, '0')}
-                  </div>
-                  <div className="text-xs md:text-sm text-white/80 uppercase tracking-wide">
-                    {item.label}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Wedding Date & Venue */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mb-8"
-        >
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 max-w-2xl mx-auto">
-            <div className="flex items-center justify-center space-x-2 mb-3">
-              <Calendar className="h-5 w-5" />
-              <p className="text-lg md:text-xl font-semibold">
-                {new Date(weddingDate).toLocaleDateString('id-ID', {
-                  weekday: 'long',
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
-                })}
-              </p>
-            </div>
-            {venue && (
-              <div className="flex items-center justify-center space-x-2">
-                <MapPin className="h-5 w-5" />
-                <p className="text-base md:text-lg">{venue}</p>
-              </div>
-            )}
-          </div>
-        </motion.div>
-
-        {/* Open Invitation Button */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
-        >
-          <Button
-            onClick={handleOpenInvitation}
-            className="bg-white text-gray-900 hover:bg-gray-100 px-8 py-4 text-lg font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-          >
-            <Mail className="h-5 w-5 mr-2" />
-            OPEN INVITATION
-          </Button>
-        </motion.div>
-
-        {/* Islamic Verse */}
-        {islamicVerse && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
-            className="mt-12 max-w-3xl mx-auto"
-          >
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
-              <p className="text-sm md:text-base text-white/90 leading-relaxed font-serif italic">
-                "{islamicVerse}"
-              </p>
-            </div>
-          </motion.div>
-        )}
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Countdown Timer at bottom */}
       <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1, delay: 1.2 }}
-        className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.4 }}
+        className="relative z-10 mb-16 w-full max-w-md mx-auto px-4"
       >
-        <div className="animate-bounce">
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-white rounded-full mt-2 animate-pulse"></div>
+        <div className="flex justify-center gap-6">
+          <div className="text-center">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/30 flex items-center justify-center mb-2">
+              <p className="text-2xl md:text-3xl font-light text-white">{days}</p>
+            </div>
+            <p className="text-sm md:text-base text-white/80 font-light">Days</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/30 flex items-center justify-center mb-2">
+              <p className="text-2xl md:text-3xl font-light text-white">{hours}</p>
+            </div>
+            <p className="text-sm md:text-base text-white/80 font-light">Hours</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/30 flex items-center justify-center mb-2">
+              <p className="text-2xl md:text-3xl font-light text-white">{minutes}</p>
+            </div>
+            <p className="text-sm md:text-base text-white/80 font-light">Minutes</p>
+          </div>
+          <div className="text-center">
+            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full border border-white/30 flex items-center justify-center mb-2">
+              <p className="text-2xl md:text-3xl font-light text-white">{seconds}</p>
+            </div>
+            <p className="text-sm md:text-base text-white/80 font-light">Seconds</p>
           </div>
         </div>
+      </motion.div>
+
+      {/* Add to Calendar Button */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.6 }}
+        className="relative z-10 mb-8"
+      >
+        <div className="border-t border-white/30 w-64 mx-auto mb-6"></div>
+        <Button
+          onClick={handleOpenInvitation}
+          className="bg-transparent hover:bg-white/10 backdrop-blur-sm text-white border border-white/50 px-8 py-3 rounded-none text-base font-light tracking-wider"
+          variant="outline"
+        >
+          Add to Calendar
+        </Button>
       </motion.div>
     </section>
   )

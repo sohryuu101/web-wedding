@@ -1,36 +1,31 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Gift, Heart, Copy, CreditCard } from 'lucide-react'
+import { Copy, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useState } from 'react'
 
-interface DigitalWallet {
+interface BankAccount {
+  bank: string
   name: string
-  accountNumber: string
-  accountName: string
-  qrCode?: string
+  number: string
 }
 
 interface WeddingGiftSectionProps {
   title?: string
-  subtitle?: string
   message?: string
-  digitalWallets?: DigitalWallet[]
-  bankAccounts?: DigitalWallet[]
-  contactInfo?: {
-    name: string
-    phone?: string
-    email?: string
-  }
+  bankAccounts?: BankAccount[]
 }
 
 export function WeddingGiftSection({
-  title = "Wedding Gifts",
-  subtitle = "Your presence is our present, but if you'd like to give a gift",
-  message = "Your presence at our wedding is the greatest gift we could ask for. However, if you would like to give us a gift, we would be honored by your generosity.",
-  digitalWallets = [],
-  bankAccounts = [],
-  contactInfo
+  title = "Wedding Gift",
+  message = "Your blessing and coming to our wedding are enough for us. However, if you want to give a gift we provide a Digital Envelope to make it easier for you. thank you",
+  bankAccounts = [
+    {
+      bank: "BANK BCA",
+      name: "Muhammad Fanny Al farizzy", 
+      number: "8375180797"
+    }
+  ]
 }: WeddingGiftSectionProps) {
   const [ref, inView] = useInView({
     triggerOnce: true,
@@ -38,6 +33,11 @@ export function WeddingGiftSection({
   })
 
   const [copiedAccount, setCopiedAccount] = useState<string | null>(null)
+  const [formData, setFormData] = useState({
+    accountOwnerName: '',
+    message: '',
+    amount: ''
+  })
 
   const handleCopyAccount = async (accountNumber: string, walletName: string) => {
     try {
@@ -49,225 +49,134 @@ export function WeddingGiftSection({
     }
   }
 
-  const hasGiftOptions = digitalWallets.length > 0 || bankAccounts.length > 0
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+  }
 
   return (
-    <section ref={ref} className="py-20 bg-gradient-to-br from-indigo-50 to-purple-50">
-      <div className="max-w-4xl mx-auto px-4">
+    <section ref={ref} className="min-h-screen bg-black text-white relative overflow-hidden">
+      {/* Background Image with grayscale filter */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat filter grayscale"
+        style={{
+          backgroundImage: `url('/placeholder.svg')`,
+        }}
+      />
+      <div className="absolute inset-0 bg-black/70" />
+      
+      <div className="relative z-10 min-h-screen flex flex-col justify-center p-8">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
           className="text-center mb-16"
         >
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Gift className="h-6 w-6 text-indigo-600" />
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 font-serif">
-              {title}
-            </h2>
-            <Gift className="h-6 w-6 text-indigo-600" />
-          </div>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            {subtitle}
+          <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-white mb-8 font-light tracking-wider">
+            {title}
+          </h2>
+          <p className="text-lg md:text-xl text-white/90 max-w-3xl mx-auto font-light leading-relaxed">
+            {message}
           </p>
         </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-white rounded-2xl shadow-xl p-8 border border-indigo-100"
-        >
-          {/* Gift Message */}
-          <div className="text-center mb-12">
-            <div className="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <Heart className="h-8 w-8 text-indigo-600" />
-            </div>
-            <p className="text-lg text-gray-700 leading-relaxed max-w-2xl mx-auto">
-              {message}
-            </p>
-          </div>
-
-          {hasGiftOptions ? (
-            <div className="space-y-8">
-              {/* Digital Wallets */}
-              {digitalWallets.length > 0 && (
-                <div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
-                    Digital Wallets
-                  </h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {digitalWallets.map((wallet, index) => (
-                      <motion.div
-                        key={wallet.name}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={inView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
-                        className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200"
-                      >
-                        <div className="flex items-center space-x-3 mb-4">
-                          <CreditCard className="h-6 w-6 text-indigo-600" />
-                          <h4 className="text-lg font-semibold text-gray-800">
-                            {wallet.name}
-                          </h4>
-                        </div>
-                        
-                        <div className="space-y-3">
-                          <div>
-                            <p className="text-sm text-gray-600 mb-1">Account Number</p>
-                            <div className="flex items-center space-x-2">
-                              <code className="bg-white px-3 py-2 rounded-lg border text-sm font-mono flex-1">
-                                {wallet.accountNumber}
-                              </code>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleCopyAccount(wallet.accountNumber, wallet.name)}
-                                className="border-indigo-200 text-indigo-600 hover:bg-indigo-50"
-                              >
-                                <Copy className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                          
-                          <div>
-                            <p className="text-sm text-gray-600 mb-1">Account Name</p>
-                            <p className="font-medium text-gray-800">{wallet.accountName}</p>
-                          </div>
-
-                          {copiedAccount === wallet.name && (
-                            <div className="text-green-600 text-sm font-medium">
-                              ✓ Account number copied!
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Bank Accounts */}
-              {bankAccounts.length > 0 && (
-                <div>
-                  <h3 className="text-xl font-bold text-gray-800 mb-6 text-center">
-                    Bank Transfers
-                  </h3>
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {bankAccounts.map((account, index) => (
-                      <motion.div
-                        key={account.name}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={inView ? { opacity: 1, y: 0 } : {}}
-                        transition={{ duration: 0.6, delay: 0.4 + index * 0.1 }}
-                        className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-6 border border-green-200"
-                      >
-                        <div className="flex items-center space-x-3 mb-4">
-                          <CreditCard className="h-6 w-6 text-green-600" />
-                          <h4 className="text-lg font-semibold text-gray-800">
-                            {account.name}
-                          </h4>
-                        </div>
-                        
-                        <div className="space-y-3">
-                          <div>
-                            <p className="text-sm text-gray-600 mb-1">Account Number</p>
-                            <div className="flex items-center space-x-2">
-                              <code className="bg-white px-3 py-2 rounded-lg border text-sm font-mono flex-1">
-                                {account.accountNumber}
-                              </code>
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                onClick={() => handleCopyAccount(account.accountNumber, account.name)}
-                                className="border-green-200 text-green-600 hover:bg-green-50"
-                              >
-                                <Copy className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                          
-                          <div>
-                            <p className="text-sm text-gray-600 mb-1">Account Name</p>
-                            <p className="font-medium text-gray-800">{account.accountName}</p>
-                          </div>
-
-                          {copiedAccount === account.name && (
-                            <div className="text-green-600 text-sm font-medium">
-                              ✓ Account number copied!
-                            </div>
-                          )}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Gift className="h-10 w-10 text-indigo-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-800 mb-4">
-                No Gift Information Available
-              </h3>
-              <p className="text-gray-600">
-                Gift information will be updated soon. Your presence is all we need!
-              </p>
-            </div>
-          )}
-
-          {/* Contact Information */}
-          {contactInfo && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-12 pt-8 border-t border-gray-200"
-            >
-              <div className="text-center">
-                <h3 className="text-lg font-semibold text-gray-800 mb-4">
-                  Need to Contact Us?
-                </h3>
-                <div className="bg-gray-50 rounded-lg p-6 max-w-md mx-auto">
-                  <p className="font-medium text-gray-800 mb-2">{contactInfo.name}</p>
-                  {contactInfo.phone && (
-                    <p className="text-gray-600 text-sm mb-1">
-                      📞 {contactInfo.phone}
-                    </p>
-                  )}
-                  {contactInfo.email && (
-                    <p className="text-gray-600 text-sm">
-                      ✉️ {contactInfo.email}
-                    </p>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* Thank You Message */}
+        {/* Gift Form */}
+        <div className="flex-1 flex items-center justify-center">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            className="mt-8 text-center"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={inView ? { opacity: 1, scale: 1 } : {}}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="max-w-md w-full"
           >
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-100">
-              <div className="flex items-center justify-center space-x-2 mb-3">
-                <Heart className="h-6 w-6 text-indigo-600" />
-                <h4 className="text-lg font-semibold text-gray-800">
-                  Thank You
-                </h4>
-                <Heart className="h-6 w-6 text-indigo-600" />
+            <div className="space-y-6">
+              {/* Bank Account Selector */}
+              <div>
+                <select className="w-full bg-white/10 backdrop-blur-sm border border-white/30 rounded-none px-4 py-3 text-white font-light">
+                  {bankAccounts.map((account, index) => (
+                    <option key={index} value={account.bank} className="bg-black text-white">
+                      {account.bank}
+                    </option>
+                  ))}
+                </select>
+                <div className="flex items-center justify-end mt-2">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => handleCopyAccount(bankAccounts[0]?.number || '', bankAccounts[0]?.bank || '')}
+                    className="text-white/80 hover:text-white p-2"
+                  >
+                    {copiedAccount === bankAccounts[0]?.bank ? (
+                      <>
+                        <Check className="h-4 w-4 mr-1" />
+                        Copy
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="h-4 w-4 mr-1" />
+                        Copy
+                      </>
+                    )}
+                  </Button>
+                </div>
               </div>
-              <p className="text-gray-700">
-                Your love and support mean the world to us. We can't wait to celebrate with you!
-              </p>
+
+              {/* Account Details */}
+              <div className="bg-white/10 backdrop-blur-sm rounded-none p-6 border border-white/20">
+                <div className="text-center space-y-2">
+                  <p className="text-2xl md:text-3xl font-serif text-white font-light">
+                    {bankAccounts[0]?.number}
+                  </p>
+                  <p className="text-white/80 font-light">
+                    {bankAccounts[0]?.name}
+                  </p>
+                </div>
+              </div>
+
+              {/* Form Fields */}
+              <div className="space-y-4">
+                {/* Account Owner Name */}
+                <div>
+                  <input
+                    type="text"
+                    name="accountOwnerName"
+                    placeholder="Account Owner Name"
+                    value={formData.accountOwnerName}
+                    onChange={handleInputChange}
+                    className="w-full bg-white/10 backdrop-blur-sm border border-white/30 rounded-none px-4 py-3 text-white placeholder-white/60 font-light"
+                  />
+                </div>
+
+                {/* Message */}
+                <div>
+                  <textarea
+                    name="message"
+                    placeholder="Message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    rows={4}
+                    className="w-full bg-white/10 backdrop-blur-sm border border-white/30 rounded-none px-4 py-3 text-white placeholder-white/60 font-light resize-none"
+                  />
+                </div>
+
+                {/* Amount */}
+                <div>
+                  <input
+                    type="text"
+                    name="amount"
+                    placeholder="Amount"
+                    value={formData.amount}
+                    onChange={handleInputChange}
+                    className="w-full bg-white/10 backdrop-blur-sm border border-white/30 rounded-none px-4 py-3 text-white placeholder-white/60 font-light"
+                  />
+                </div>
+              </div>
             </div>
           </motion.div>
-        </motion.div>
+        </div>
       </div>
     </section>
   )

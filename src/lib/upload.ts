@@ -39,6 +39,11 @@ export async function uploadImage(file: File): Promise<UploadResponse> {
         const error = await response.json();
         errorMessage = error.error || errorMessage;
         console.error('Upload error response:', error);
+        
+        // Check for auth errors
+        if (response.status === 401 || response.status === 403) {
+          throw new Error('Authentication required');
+        }
       } catch {
         // If response is not JSON, use status text
         errorMessage = response.statusText || errorMessage;

@@ -1,13 +1,16 @@
 import { Badge } from "@/components/ui/badge"
-import { useState } from "react"
 import { HeroSection } from "./sections/hero-section"
 import { ThankYouSection } from "./sections/thank-you-section"
 import { CoupleProfilesSection } from "./sections/couple-profiles-section"
 import { LoveStorySection } from "./sections/love-story-section"
 import { EventDetailsSection } from "./sections/event-details-section"
 import { PhotoGallerySection } from "./sections/photo-gallery-section"
+import { VideoGallerySection } from "./sections/video-gallery-section"
+import { LiveStreamingSection } from "./sections/live-streaming-section"
 import { RSVPSection } from "./sections/rsvp-section"
 import { WeddingGiftSection } from "./sections/wedding-gift-section"
+import { WeddingWishSection } from "./sections/wedding-wish-section"
+import { FinalSection } from "./sections/final-section"
 
 export interface InvitationData {
   id: number
@@ -57,13 +60,20 @@ export interface InvitationData {
     image?: string
   }>
   event_details?: {
-    date: string
-    time: string
-    venue: string
-    address: string
-    google_maps_url?: string
-    dress_code?: string
-    additional_info?: string
+    akadNikah: {
+      date: string
+      time: string
+      venue: string
+      address: string
+      googleMapsUrl?: string
+    }
+    resepsi: {
+      date: string
+      time: string
+      venue: string
+      address: string
+      googleMapsUrl?: string
+    }
   }
   photo_gallery?: Array<{
     id: string
@@ -71,31 +81,54 @@ export interface InvitationData {
     alt: string
     caption?: string
   }>
+  video_gallery?: Array<{
+    id: string
+    title: string
+    thumbnail: string
+    videoUrl: string
+    description?: string
+  }>
+  live_streaming?: {
+    streamUrl?: string
+    previewImage?: string
+    storyText?: string
+    photoGallery?: Array<{
+      src: string
+      alt: string
+    }>
+  }
   thank_you_message?: string
   digital_wallets?: Array<{
     name: string
-    account_number: string
-    account_name: string
-    qr_code?: string
+    number: string
   }>
   bank_accounts?: Array<{
+    bank: string
     name: string
-    account_number: string
-    account_name: string
-    qr_code?: string
+    number: string
   }>
   contact_info?: {
     name: string
     phone?: string
     email?: string
   }
+  wedding_wishes?: Array<{
+    id: string
+    name: string
+    message: string
+    date: string
+  }>
+  hashtag?: string
+  powered_by?: {
+    name: string
+    logo?: string
+  }
 }
 
 interface WeddingInvitationTemplateProps {
   invitation: InvitationData
-  onRSVP?: (rsvpData: RSVPFormData) => void
+  onRSVP?: (rsvpData: RSVPFormData) => Promise<void>
   isPreview?: boolean
-  guestName?: string
 }
 
 export interface RSVPFormData {
@@ -111,38 +144,29 @@ export interface RSVPFormData {
 export function WeddingInvitationTemplate({ 
   invitation, 
   onRSVP, 
-  isPreview = false,
-  guestName = "Nama Tamu"
+  isPreview = false
 }: WeddingInvitationTemplateProps) {
-  const [showRSVP, setShowRSVP] = useState(false)
-  const [rsvpSubmitted, setRSVPSubmitted] = useState(false)
-
+  
   const handleRSVP = async (rsvpData: RSVPFormData) => {
     if (onRSVP && !isPreview) {
       try {
         await onRSVP(rsvpData)
-        setRSVPSubmitted(true)
-        setShowRSVP(false)
       } catch (error) {
         console.error('RSVP submission failed:', error)
       }
-    } else if (isPreview) {
-      // For preview mode, just show success
-      setRSVPSubmitted(true)
-      setShowRSVP(false)
     }
   }
 
-  const handleRSVPSection = async (rsvpData: { guestName: string; guestEmail?: string; guestPhone?: string; attendance: 'yes' | 'no' | 'maybe'; guestCount: number; dietaryRequirements?: string; message?: string }) => {
-    // Transform the RSVP data to match the expected format
+  // Transform RSVP data to match the main interface
+  const handleRSVPFromSection = async (data: { name: string; message: string; attendance: "hadir" | "tidak_hadir"; totalGuests: number }) => {
     const transformedData: RSVPFormData = {
-      guest_name: rsvpData.guestName,
-      guest_email: rsvpData.guestEmail,
-      guest_phone: rsvpData.guestPhone,
-      attendance: rsvpData.attendance,
-      guest_count: rsvpData.guestCount,
-      dietary_requirements: rsvpData.dietaryRequirements,
-      message: rsvpData.message
+      guest_name: data.name,
+      guest_email: undefined,
+      guest_phone: undefined,
+      attendance: data.attendance === "hadir" ? "yes" : "no",
+      guest_count: data.totalGuests,
+      dietary_requirements: undefined,
+      message: data.message
     }
     await handleRSVP(transformedData)
   }
@@ -171,12 +195,9 @@ export function WeddingInvitationTemplate({
         brideName={invitation.bride_name}
         groomName={invitation.groom_name}
         weddingDate={invitation.wedding_date}
-        venue={invitation.venue}
         coverImage={invitation.cover_image}
-        islamicVerse={invitation.islamic_verse}
         mainTitle={invitation.main_title}
         subtitle={invitation.subtitle}
-        guestName={guestName}
         onOpenInvitation={handleOpenInvitation}
       />
 
@@ -202,150 +223,73 @@ export function WeddingInvitationTemplate({
         }}
       />
 
-      {/* Love Story Section */}
-      <LoveStorySection
-        milestones={invitation.love_story || [
-          {
-            id: "1",
-            date: "2019-10-13",
-            title: "First Meeting",
-            description: "The beginning of our story with a random Tinder match. Calvin messaged first with a flower emoji, leading to a flowing conversation where they felt like they had known each other forever.",
-            location: "Jakarta, Indonesia"
-          },
-          {
-            id: "2",
-            date: "2019-11-16",
-            title: "First Movie Date",
-            description: "Our first movie date, highlighting the quiet magic of being together as more significant than the movie itself.",
-            location: "Jakarta, Indonesia"
-          },
-          {
-            id: "3",
-            date: "2019-12-30",
-            title: "Concert Date",
-            description: "A concert date where we found our rhythm, danced, laughed, and sang, marking it as the start of something special.",
-            location: "Jakarta, Indonesia"
-          },
-          {
-            id: "4",
-            date: "2025-06-21",
-            title: "Forever",
-            description: "We will begin a new chapter as husband and wife. We acknowledge the challenges ahead (uphill climbs and valleys) but emphasize that no journey will ever be too difficult to take as long as we hold each other's hand. This is our story - A love that will last forever.",
-            location: "Jakarta, Indonesia"
-          }
-        ]}
-      />
+      {/* Photo Gallery Section */}
+      {invitation.photo_gallery && invitation.photo_gallery.length > 0 && (
+        <PhotoGallerySection
+          photos={invitation.photo_gallery}
+          title="Our Gallery"
+          subtitle="Our Engagement"
+        />
+      )}
+
+      {/* Video Gallery Section */}
+      {invitation.video_gallery && invitation.video_gallery.length > 0 && (
+        <VideoGallerySection
+          videos={invitation.video_gallery}
+          title="Our Footage"
+          subtitle="The Pre-Wedding"
+        />
+      )}
 
       {/* Event Details Section */}
-      <EventDetailsSection
-        eventDetails={invitation.event_details || {
-          date: "2025-07-05",
-          time: "16:00",
-          venue: "New Batavia Cafe",
-          address: "Taman Fatahillah No.3, RW.7, Pinangsia, Kec. Taman Sari, Kota Jakarta Barat, Daerah Khusus Ibukota Jakarta 11110",
-          google_maps_url: "https://maps.google.com/?q=New+Batavia+Cafe+Kota+Tua",
-          dress_code: "Formal / Semi-Formal",
-          additional_info: "Please arrive 30 minutes before the ceremony. Parking is available at the venue."
-        }}
-        onRSVP={() => setShowRSVP(true)}
-        rsvpButtonText="RSVP Now"
-      />
+      {invitation.event_details && (
+        <EventDetailsSection
+          eventDetails={invitation.event_details}
+        />
+      )}
 
-      {/* Photo Gallery Section */}
-      <PhotoGallerySection
-        photos={invitation.photo_gallery || [
-          {
-            id: "1",
-            src: "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-            alt: "Engagement Photo 1",
-            caption: "Our engagement shoot at Taman Suropati"
-          },
-          {
-            id: "2",
-            src: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-            alt: "Engagement Photo 2",
-            caption: "Sunset at Ancol Beach"
-          },
-          {
-            id: "3",
-            src: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-            alt: "Engagement Photo 3",
-            caption: "Romantic dinner at Skye Bar"
-          },
-          {
-            id: "4",
-            src: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-            alt: "Bride Portrait",
-            caption: "Nabila's bridal portrait"
-          },
-          {
-            id: "5",
-            src: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-            alt: "Groom Portrait",
-            caption: "Calvin's groom portrait"
-          },
-          {
-            id: "6",
-            src: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80",
-            alt: "Couple Photo",
-            caption: "Together forever"
-          }
-        ]}
-      />
-
-      {/* RSVP Section */}
-      {!isPreview && !rsvpSubmitted && showRSVP && (
-        <RSVPSection
-          onRSVP={handleRSVPSection}
+      {/* Live Streaming Section */}
+      {invitation.live_streaming && (
+        <LiveStreamingSection
+          title="Live Streaming"
+          subtitle="Our Story"
+          storyText={invitation.live_streaming.storyText}
+          streamUrl={invitation.live_streaming.streamUrl}
+          previewImage={invitation.live_streaming.previewImage}
+          photoGallery={invitation.live_streaming.photoGallery}
         />
       )}
 
       {/* Wedding Gift Section */}
       <WeddingGiftSection
-        digitalWallets={invitation.digital_wallets?.map(wallet => ({
-          name: wallet.name,
-          accountNumber: wallet.account_number,
-          accountName: wallet.account_name,
-          qrCode: wallet.qr_code
-        })) || [
+        title="Wedding Gift"
+        message="Your blessing and coming to our wedding are enough for us. However, if you want to give a gift we provide a Digital Envelope to make it easier for you. thank you"
+        bankAccounts={invitation.bank_accounts || [
           {
-            name: "GoPay",
-            accountNumber: "081234567890",
-            accountName: "Nabila Khansa Pranajaya"
-          },
-          {
-            name: "OVO",
-            accountNumber: "081234567890",
-            accountName: "Calvin Rahmat Prabowo Nugroho"
-          },
-          {
-            name: "DANA",
-            accountNumber: "081234567890",
-            accountName: "Nabila Khansa Pranajaya"
+            bank: "BANK BCA",
+            name: "Muhammad Fanny Al farizzy",
+            number: "8375180797"
           }
         ]}
-        bankAccounts={invitation.bank_accounts?.map(account => ({
-          name: account.name,
-          accountNumber: account.account_number,
-          accountName: account.account_name,
-          qrCode: account.qr_code
-        })) || [
-          {
-            name: "BCA",
-            accountNumber: "1234567890",
-            accountName: "Nabila Khansa Pranajaya"
-          },
-          {
-            name: "Mandiri",
-            accountNumber: "0987654321",
-            accountName: "Calvin Rahmat Prabowo Nugroho"
-          }
-        ]}
-        contactInfo={invitation.contact_info || {
-          name: "Wedding Organizer",
-          phone: "+62 812-3456-7890",
-          email: "wedding@calvin-nabila.com"
-        }}
+      />
+
+      {/* Wedding Wish Section */}
+      <WeddingWishSection
+        title="Wedding Wish"
+        wishes={invitation.wedding_wishes}
+      />
+
+      {/* Love Story Section */}
+      {invitation.love_story && invitation.love_story.length > 0 && (
+        <LoveStorySection
+          milestones={invitation.love_story}
+        />
+      )}
+
+      {/* RSVP Section */}
+      <RSVPSection
+        onRSVP={handleRSVPFromSection}
+        existingMessages={[]}
       />
 
       {/* Thank You Section */}
@@ -356,21 +300,18 @@ export function WeddingInvitationTemplate({
         coupleNames={`${invitation.bride_name} & ${invitation.groom_name}`}
       />
 
-      {/* Footer */}
-      <footer className="py-8 bg-gray-900 text-white text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <p className="text-sm text-gray-400">
-            Created with ❤️ for {invitation.bride_name} & {invitation.groom_name}
-          </p>
-          {isPreview && (
-            <div className="mt-4 flex justify-center space-x-6 text-xs text-gray-500">
-              <span>Theme: {invitation.theme}</span>
-              <span>Views: {invitation.views}</span>
-              <span>RSVPs: {invitation.rsvps}</span>
-            </div>
-          )}
-        </div>
-      </footer>
+      {/* Final Section */}
+      <FinalSection
+        brideName={invitation.bride_name}
+        groomName={invitation.groom_name}
+        weddingDate={invitation.wedding_date}
+        hashtag={invitation.hashtag || "#PromDatetoLifeMate"}
+        poweredBy={invitation.powered_by || {
+          name: "KATSUDOTO",
+          logo: "🤍"
+        }}
+        backgroundImage={invitation.cover_image}
+      />
     </div>
   )
 } 

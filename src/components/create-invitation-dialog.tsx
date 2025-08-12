@@ -1,42 +1,34 @@
 "use client"
 
-import { useState } from "react"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { apiClient, CreateInvitationData } from "@/lib/api"
+import { ImageUpload } from "@/components/ui/image-upload"
+import { Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { apiClient, CreateInvitationData } from "@/lib/api"
+import { useState } from "react"
 
 interface CreateInvitationDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
+interface ApiError {
+  message: string;
+}
+
 const themes = [
-  "Rose Garden",
-  "Ocean Breeze", 
-  "Golden Sunset",
-  "Winter Wonderland",
-  "Forest Green",
-  "Lavender Dreams",
-  "Classic Elegance",
-  "Modern Minimalist"
+  "Taman Mawar",
+  "Angin Laut", 
+  "Senja Keemasan",
+  "Negeri Salju",
+  "Hutan Hijau",
+  "Impian Lavender",
+  "Elegan Klasik",
+  "Minimalis Modern"
 ]
 
 export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationDialogProps) {
@@ -46,10 +38,10 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
     groom_name: "",
     wedding_date: "",
     venue: "",
-    main_title: "Save The Date",
-    subtitle: "We're Getting Married!",
-    message: "Join us for our special day...",
-    theme: "Rose Garden",
+    main_title: "Simpan Tanggal",
+    subtitle: "Kami Akan Menikah!",
+    message: "Bergabunglah bersama kami di hari spesial kami...",
+    theme: "Taman Mawar",
     custom_slug: "",
     // Couple profile fields
     bride_photo: "",
@@ -93,10 +85,10 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
       groom_name: "",
       wedding_date: "",
       venue: "",
-      main_title: "Save The Date",
-      subtitle: "We're Getting Married!",
-      message: "Join us for our special day...",
-      theme: "Rose Garden",
+      main_title: "Simpan Tanggal",
+      subtitle: "Kami Akan Menikah!",
+      message: "Bergabunglah bersama kami di hari spesial kami...",
+      theme: "Taman Mawar",
       custom_slug: "",
       // Couple profile fields
       bride_photo: "",
@@ -192,27 +184,27 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Create New Invitation</DialogTitle>
+          <DialogTitle>Buat Undangan Baru</DialogTitle>
           <DialogDescription>
-            Create a beautiful wedding invitation to share with your guests.
+            Buat undangan pernikahan yang indah untuk dibagikan kepada tamu Anda.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {createMutation.error && (
             <div className="p-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md">
-              {(createMutation.error as any)?.message || "Failed to create invitation"}
+              {(createMutation.error as any)?.message || "Gagal membuat undangan"}
             </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="bride_name">Bride's Name *</Label>
+              <Label htmlFor="bride_name">Nama Pengantin Wanita *</Label>
               <Input
                 id="bride_name"
                 value={formData.bride_name}
                 onChange={(e) => handleInputChange("bride_name", e.target.value)}
-                placeholder="Enter bride's name"
+                placeholder="Masukkan nama pengantin wanita"
                 className={errors.bride_name ? "border-red-500" : ""}
               />
               {errors.bride_name && (
@@ -221,12 +213,12 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="groom_name">Groom's Name *</Label>
+              <Label htmlFor="groom_name">Nama Pengantin Pria *</Label>
               <Input
                 id="groom_name"
                 value={formData.groom_name}
                 onChange={(e) => handleInputChange("groom_name", e.target.value)}
-                placeholder="Enter groom's name"
+                placeholder="Masukkan nama pengantin pria"
                 className={errors.groom_name ? "border-red-500" : ""}
               />
               {errors.groom_name && (
@@ -237,7 +229,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="wedding_date">Wedding Date *</Label>
+              <Label htmlFor="wedding_date">Tanggal Pernikahan *</Label>
               <Input
                 id="wedding_date"
                 type="date"
@@ -251,247 +243,195 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="theme">Theme</Label>
-              <Select value={formData.theme} onValueChange={(value) => handleInputChange("theme", value)}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a theme" />
-                </SelectTrigger>
-                <SelectContent>
-                  {themes.map((theme) => (
-                    <SelectItem key={theme} value={theme}>
-                      {theme}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <Label htmlFor="venue">Tempat *</Label>
+              <Input
+                id="venue"
+                value={formData.venue}
+                onChange={(e) => handleInputChange("venue", e.target.value)}
+                placeholder="Masukkan lokasi pernikahan"
+                className={errors.venue ? "border-red-500" : ""}
+              />
+              {errors.venue && (
+                <p className="text-xs text-red-600">{errors.venue}</p>
+              )}
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="venue">Venue</Label>
-            <Input
-              id="venue"
-              value={formData.venue}
-              onChange={(e) => handleInputChange("venue", e.target.value)}
-              placeholder="Enter venue name (optional)"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="main_title">Main Title</Label>
+            <Label htmlFor="main_title">Judul Utama</Label>
             <Input
               id="main_title"
               value={formData.main_title}
               onChange={(e) => handleInputChange("main_title", e.target.value)}
-              placeholder="Save The Date"
+              placeholder="Simpan Tanggal"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="subtitle">Subtitle</Label>
+            <Label htmlFor="subtitle">Sub Judul</Label>
             <Input
               id="subtitle"
               value={formData.subtitle}
               onChange={(e) => handleInputChange("subtitle", e.target.value)}
-              placeholder="We're Getting Married!"
+              placeholder="Kami Akan Menikah!"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="message">Message</Label>
+            <Label htmlFor="message">Pesan</Label>
             <Textarea
               id="message"
               value={formData.message}
               onChange={(e) => handleInputChange("message", e.target.value)}
-              placeholder="Join us for our special day..."
+              placeholder="Bergabunglah bersama kami di hari spesial kami..."
               rows={3}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="custom_slug">Custom URL (Optional)</Label>
+            <Label htmlFor="custom_slug">URL Kustom (Opsional)</Label>
             <Input
               id="custom_slug"
               value={formData.custom_slug}
               onChange={(e) => handleInputChange("custom_slug", e.target.value)}
-              placeholder="custom-url-name (leave empty for auto-generation)"
+              placeholder="nama-url-kustom (kosongkan untuk pembuatan otomatis)"
             />
             <p className="text-xs text-gray-500">
-              This will create a URL like: /invitation/your-custom-url
+              Ini akan membuat URL seperti: /invitation/url-kustom-anda
             </p>
           </div>
 
-          {/* Couple Profile Section */}
+          {/* Profil Pasangan */}
           <div className="border-t pt-6">
-            <h3 className="text-lg font-semibold mb-4">Couple Profiles</h3>
+            <h3 className="text-lg font-semibold mb-4">Profil Pasangan</h3>
             
-            {/* Bride Profile */}
-            <div className="space-y-4 mb-6">
-              <h4 className="text-md font-medium text-pink-600">Bride's Information</h4>
-              
+            {/* Foto Pasangan */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div className="space-y-2">
-                <Label htmlFor="bride_photo">Bride's Photo URL (Optional)</Label>
-                <Input
+                <Label htmlFor="bride_photo">Foto Pengantin Wanita</Label>
+                <ImageUpload
                   id="bride_photo"
                   value={formData.bride_photo}
-                  onChange={(e) => handleInputChange("bride_photo", e.target.value)}
-                  placeholder="https://example.com/bride-photo.jpg"
+                  onChange={(url) => handleInputChange("bride_photo", url)}
+                  className="w-full aspect-square"
                 />
               </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="groom_photo">Foto Pengantin Pria</Label>
+                <ImageUpload
+                  id="groom_photo"
+                  value={formData.groom_photo}
+                  onChange={(url) => handleInputChange("groom_photo", url)}
+                  className="w-full aspect-square"
+                />
+              </div>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Orang Tua Pengantin */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+              <div className="space-y-4">
+                <h4 className="font-medium">Orang Tua Pengantin Wanita</h4>
                 <div className="space-y-2">
-                  <Label htmlFor="bride_father">Bride's Father Name</Label>
+                  <Label htmlFor="bride_father">Nama Ayah</Label>
                   <Input
                     id="bride_father"
-                    value={formData.bride_parents?.father || ""}
+                    value={formData.bride_parents.father}
                     onChange={(e) => handleNestedInputChange("bride_parents", "father", e.target.value)}
-                    placeholder="Father's name"
+                    placeholder="Nama ayah pengantin wanita"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="bride_mother">Bride's Mother Name</Label>
+                  <Label htmlFor="bride_mother">Nama Ibu</Label>
                   <Input
                     id="bride_mother"
-                    value={formData.bride_parents?.mother || ""}
+                    value={formData.bride_parents.mother}
                     onChange={(e) => handleNestedInputChange("bride_parents", "mother", e.target.value)}
-                    placeholder="Mother's name"
+                    placeholder="Nama ibu pengantin wanita"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="bride_birth_order">Bride's Birth Order</Label>
-                <Select 
-                  value={formData.bride_birth_order} 
-                  onValueChange={(value) => handleInputChange("bride_birth_order", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select birth order" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="first">First Child</SelectItem>
-                    <SelectItem value="second">Second Child</SelectItem>
-                    <SelectItem value="third">Third Child</SelectItem>
-                    <SelectItem value="fourth">Fourth Child</SelectItem>
-                    <SelectItem value="fifth">Fifth Child</SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="space-y-4">
+                <h4 className="font-medium">Orang Tua Pengantin Pria</h4>
+                <div className="space-y-2">
+                  <Label htmlFor="groom_father">Nama Ayah</Label>
+                  <Input
+                    id="groom_father"
+                    value={formData.groom_parents.father}
+                    onChange={(e) => handleNestedInputChange("groom_parents", "father", e.target.value)}
+                    placeholder="Nama ayah pengantin pria"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="groom_mother">Nama Ibu</Label>
+                  <Input
+                    id="groom_mother"
+                    value={formData.groom_parents.mother}
+                    onChange={(e) => handleNestedInputChange("groom_parents", "mother", e.target.value)}
+                    placeholder="Nama ibu pengantin pria"
+                  />
+                </div>
               </div>
+            </div>
 
+            {/* Media Sosial */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div className="space-y-2">
-                <Label htmlFor="bride_instagram">Bride's Instagram (Optional)</Label>
+                <Label htmlFor="bride_instagram">Instagram Pengantin Wanita</Label>
                 <Input
                   id="bride_instagram"
-                  value={formData.bride_social_media?.instagram || ""}
+                  value={formData.bride_social_media.instagram}
                   onChange={(e) => handleNestedInputChange("bride_social_media", "instagram", e.target.value)}
-                  placeholder="instagram_username"
+                  placeholder="@username"
                 />
               </div>
-
               <div className="space-y-2">
-                <Label htmlFor="bride_description">Bride's Description (Optional)</Label>
+                <Label htmlFor="groom_instagram">Instagram Pengantin Pria</Label>
+                <Input
+                  id="groom_instagram"
+                  value={formData.groom_social_media.instagram}
+                  onChange={(e) => handleNestedInputChange("groom_social_media", "instagram", e.target.value)}
+                  placeholder="@username"
+                />
+              </div>
+            </div>
+
+            {/* Deskripsi Pasangan */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="bride_description">Deskripsi Pengantin Wanita</Label>
                 <Textarea
                   id="bride_description"
                   value={formData.bride_description}
                   onChange={(e) => handleInputChange("bride_description", e.target.value)}
-                  placeholder="Tell us about the bride..."
+                  placeholder="Ceritakan tentang pengantin wanita..."
                   rows={3}
                 />
               </div>
-            </div>
-
-            {/* Groom Profile */}
-            <div className="space-y-4">
-              <h4 className="text-md font-medium text-blue-600">Groom's Information</h4>
-              
               <div className="space-y-2">
-                <Label htmlFor="groom_photo">Groom's Photo URL (Optional)</Label>
-                <Input
-                  id="groom_photo"
-                  value={formData.groom_photo}
-                  onChange={(e) => handleInputChange("groom_photo", e.target.value)}
-                  placeholder="https://example.com/groom-photo.jpg"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="groom_father">Groom's Father Name</Label>
-                  <Input
-                    id="groom_father"
-                    value={formData.groom_parents?.father || ""}
-                    onChange={(e) => handleNestedInputChange("groom_parents", "father", e.target.value)}
-                    placeholder="Father's name"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="groom_mother">Groom's Mother Name</Label>
-                  <Input
-                    id="groom_mother"
-                    value={formData.groom_parents?.mother || ""}
-                    onChange={(e) => handleNestedInputChange("groom_parents", "mother", e.target.value)}
-                    placeholder="Mother's name"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="groom_birth_order">Groom's Birth Order</Label>
-                <Select 
-                  value={formData.groom_birth_order} 
-                  onValueChange={(value) => handleInputChange("groom_birth_order", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select birth order" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="first">First Child</SelectItem>
-                    <SelectItem value="second">Second Child</SelectItem>
-                    <SelectItem value="third">Third Child</SelectItem>
-                    <SelectItem value="fourth">Fourth Child</SelectItem>
-                    <SelectItem value="fifth">Fifth Child</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="groom_instagram">Groom's Instagram (Optional)</Label>
-                <Input
-                  id="groom_instagram"
-                  value={formData.groom_social_media?.instagram || ""}
-                  onChange={(e) => handleNestedInputChange("groom_social_media", "instagram", e.target.value)}
-                  placeholder="instagram_username"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="groom_description">Groom's Description (Optional)</Label>
+                <Label htmlFor="groom_description">Deskripsi Pengantin Pria</Label>
                 <Textarea
                   id="groom_description"
                   value={formData.groom_description}
                   onChange={(e) => handleInputChange("groom_description", e.target.value)}
-                  placeholder="Tell us about the groom..."
+                  placeholder="Ceritakan tentang pengantin pria..."
                   rows={3}
                 />
               </div>
             </div>
           </div>
 
-          <DialogFooter className="gap-2">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={() => onOpenChange(false)}
-              disabled={createMutation.isPending}
-            >
-              Cancel
-            </Button>
-            <Button 
-              type="submit" 
-              disabled={createMutation.isPending}
-            >
-              {createMutation.isPending ? "Creating..." : "Create Invitation"}
+          <DialogFooter>
+            <Button type="submit" disabled={createMutation.isPending}>
+              {createMutation.isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Memproses...
+                </>
+              ) : (
+                "Buat Undangan"
+              )}
             </Button>
           </DialogFooter>
         </form>

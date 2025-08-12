@@ -10,37 +10,37 @@ export function NotificationSection() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-900">Notifications</h2>
-        <p className="text-gray-600 mt-2">Set up automated notifications and reminders for your guests</p>
+        <h2 className="text-3xl font-bold text-gray-900">Notifikasi</h2>
+        <p className="text-gray-600 mt-2">Atur notifikasi dan pengingat otomatis untuk tamu Anda</p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
             <Bell className="h-5 w-5 mr-2 text-blue-500" />
-            Notification Settings
+            Pengaturan Notifikasi
           </CardTitle>
-          <CardDescription>Configure how and when to notify your guests</CardDescription>
+          <CardDescription>Konfigurasi cara dan waktu untuk memberi notifikasi kepada tamu</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="email-notifications">Email Notifications</Label>
-              <p className="text-sm text-gray-500">Send email reminders to guests</p>
+              <Label htmlFor="email-notifications">Notifikasi Email</Label>
+              <p className="text-sm text-gray-500">Kirim pengingat melalui email ke tamu</p>
             </div>
             <Switch id="email-notifications" />
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="sms-notifications">SMS Notifications</Label>
-              <p className="text-sm text-gray-500">Send text message reminders</p>
+              <Label htmlFor="sms-notifications">Notifikasi SMS</Label>
+              <p className="text-sm text-gray-500">Kirim pengingat melalui pesan teks</p>
             </div>
             <Switch id="sms-notifications" />
           </div>
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="push-notifications">Push Notifications</Label>
-              <p className="text-sm text-gray-500">Send app notifications</p>
+              <Label htmlFor="push-notifications">Notifikasi Push</Label>
+              <p className="text-sm text-gray-500">Kirim notifikasi aplikasi</p>
             </div>
             <Switch id="push-notifications" />
           </div>
@@ -52,17 +52,21 @@ export function NotificationSection() {
           <CardTitle className="flex items-center justify-between">
             <span className="flex items-center">
               <Calendar className="h-5 w-5 mr-2 text-green-500" />
-              Scheduled Reminders
+              Pengingat Terjadwal
             </span>
             <Button size="sm">
               <Plus className="h-4 w-4 mr-2" />
-              Add Reminder
+              Tambah Pengingat
             </Button>
           </CardTitle>
-          <CardDescription>Set up automatic reminders for your wedding events</CardDescription>
+          <CardDescription>Atur pengingat otomatis untuk acara pernikahan Anda</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {["Save the Date", "RSVP Reminder", "Wedding Day Reminder"].map((reminder, index) => (
+          {[
+            "Simpan Tanggal",
+            "Pengingat RSVP",
+            "Pengingat Hari Pernikahan"
+          ].map((reminder, index) => (
             <div key={index} className="border rounded-lg p-4 space-y-4">
               <div className="flex items-center justify-between">
                 <h4 className="font-medium">{reminder}</h4>
@@ -70,23 +74,22 @@ export function NotificationSection() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label>Send Date</Label>
+                  <Label>Tanggal Kirim</Label>
                   <Input type="date" />
                 </div>
                 <div>
-                  <Label>Send Time</Label>
+                  <Label>Waktu Kirim</Label>
                   <Input type="time" />
                 </div>
               </div>
               <div>
-                <Label>Message</Label>
-                <Textarea placeholder="Customize the reminder message..." />
+                <Label>Pesan</Label>
+                <Textarea placeholder="Sesuaikan pesan pengingat..." />
               </div>
             </div>
           ))}
         </CardContent>
       </Card>
-
     </div>
   )
 }

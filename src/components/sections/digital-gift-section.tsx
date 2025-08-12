@@ -10,32 +10,32 @@ export function DigitalGiftSection() {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-3xl font-bold text-gray-900">Digital Gifts</h2>
-        <p className="text-gray-600 mt-2">Set up digital gift options for your guests</p>
+        <h2 className="text-3xl font-bold text-gray-900">Hadiah Digital</h2>
+        <p className="text-gray-600 mt-2">Atur opsi hadiah digital untuk tamu Anda</p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
             <Gift className="h-5 w-5 mr-2 text-green-500" />
-            Gift Registry Settings
+            Pengaturan Hadiah Digital
           </CardTitle>
-          <CardDescription>Configure your digital gift options</CardDescription>
+          <CardDescription>Konfigurasi opsi hadiah digital Anda</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="enable-gifts">Enable Digital Gifts</Label>
-              <p className="text-sm text-gray-500">Allow guests to send digital gifts</p>
+              <Label htmlFor="enable-gifts">Aktifkan Hadiah Digital</Label>
+              <p className="text-sm text-gray-500">Izinkan tamu untuk mengirim hadiah digital</p>
             </div>
             <Switch id="enable-gifts" />
           </div>
 
           <div>
-            <Label htmlFor="gift-message">Gift Section Message</Label>
+            <Label htmlFor="gift-message">Pesan Bagian Hadiah</Label>
             <Textarea
               id="gift-message"
-              placeholder="Your presence is the only present we need, but if you'd like to give a gift..."
+              placeholder="Kehadiran Anda adalah hadiah terbaik bagi kami, namun jika Anda ingin memberikan hadiah..."
             />
           </div>
         </CardContent>
@@ -45,56 +45,61 @@ export function DigitalGiftSection() {
         <CardHeader>
           <CardTitle className="flex items-center">
             <CreditCard className="h-5 w-5 mr-2 text-blue-500" />
-            Payment Methods
+            Rekening Bank
           </CardTitle>
-          <CardDescription>Set up how guests can send monetary gifts</CardDescription>
+          <CardDescription>Tambahkan rekening bank untuk menerima hadiah</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="border rounded-lg p-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <DollarSign className="h-6 w-6 text-green-600" />
-                  <span className="font-medium">PayPal</span>
-                </div>
-                <Switch />
-              </div>
-              <Input placeholder="PayPal Email Address" />
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="bank-name">Nama Bank</Label>
+              <Input id="bank-name" placeholder="Contoh: Bank BCA" />
             </div>
-
-            <div className="border rounded-lg p-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <CreditCard className="h-6 w-6 text-blue-600" />
-                  <span className="font-medium">Venmo</span>
-                </div>
-                <Switch />
-              </div>
-              <Input placeholder="@venmo-username" />
+            <div className="space-y-2">
+              <Label htmlFor="account-name">Nama Pemilik Rekening</Label>
+              <Input id="account-name" placeholder="Masukkan nama pemilik rekening" />
             </div>
-
-            <div className="border rounded-lg p-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <DollarSign className="h-6 w-6 text-purple-600" />
-                  <span className="font-medium">Zelle</span>
-                </div>
-                <Switch />
-              </div>
-              <Input placeholder="Phone Number or Email" />
-            </div>
-
-            <div className="border rounded-lg p-4 space-y-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <CreditCard className="h-6 w-6 text-green-600" />
-                  <span className="font-medium">Cash App</span>
-                </div>
-                <Switch />
-              </div>
-              <Input placeholder="$cashtag" />
+            <div className="space-y-2">
+              <Label htmlFor="account-number">Nomor Rekening</Label>
+              <Input id="account-number" placeholder="Masukkan nomor rekening" />
             </div>
           </div>
+
+          <Button className="w-full">
+            <Plus className="h-4 w-4 mr-2" />
+            Tambah Rekening Bank
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <DollarSign className="h-5 w-5 mr-2 text-purple-500" />
+            Dompet Digital
+          </CardTitle>
+          <CardDescription>Tambahkan opsi dompet digital</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="wallet-type">Jenis Dompet Digital</Label>
+              <Input id="wallet-type" placeholder="Contoh: GoPay, OVO, DANA" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="wallet-name">Nama Pemilik</Label>
+              <Input id="wallet-name" placeholder="Masukkan nama pemilik" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="wallet-number">Nomor Dompet Digital</Label>
+              <Input id="wallet-number" placeholder="Masukkan nomor dompet digital" />
+            </div>
+          </div>
+
+          <Button className="w-full">
+            <Plus className="h-4 w-4 mr-2" />
+            Tambah Dompet Digital
+          </Button>
         </CardContent>
       </Card>
 

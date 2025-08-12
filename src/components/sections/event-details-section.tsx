@@ -1,142 +1,165 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'react-intersection-observer'
-import { Calendar, ExternalLink, Heart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { format } from 'date-fns'
 import { id } from 'date-fns/locale'
 
 interface EventDetails {
-  date: string
-  time: string
-  venue: string
-  address: string
-  googleMapsUrl?: string
-  dressCode?: string
-  additionalInfo?: string
+  akadNikah: {
+    date: string
+    time: string
+    venue: string
+    address: string
+    googleMapsUrl?: string
+  }
+  resepsi: {
+    date: string
+    time: string
+    venue: string
+    address: string
+    googleMapsUrl?: string
+  }
 }
 
 interface EventDetailsSectionProps {
   eventDetails: EventDetails
-  onRSVP?: () => void
-  rsvpButtonText?: string
 }
 
 export function EventDetailsSection({ 
-  eventDetails, 
-  onRSVP,
-  rsvpButtonText = "RSVP Now"
+  eventDetails
 }: EventDetailsSectionProps) {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1
   })
 
-  const handleGoogleMaps = () => {
-    if (eventDetails.googleMapsUrl) {
-      window.open(eventDetails.googleMapsUrl, '_blank')
-    } else {
+  const handleGoogleMaps = (url?: string, venue?: string, address?: string) => {
+    if (url) {
+      window.open(url, '_blank')
+    } else if (venue && address) {
       // Fallback to Google Maps search
-      const searchQuery = encodeURIComponent(`${eventDetails.venue}, ${eventDetails.address}`)
+      const searchQuery = encodeURIComponent(`${venue}, ${address}`)
       window.open(`https://www.google.com/maps/search/${searchQuery}`, '_blank')
     }
   }
 
-
-
   return (
-    <section ref={ref} className="py-20 bg-gray-900 text-white">
-      <div className="max-w-4xl mx-auto px-4">
+    <section ref={ref} className="min-h-screen bg-black text-white relative overflow-hidden">
+      <div className="relative z-10 min-h-screen flex flex-col justify-center p-8">
+        {/* Akad Nikah */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <Calendar className="h-6 w-6 text-pink-500" />
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-serif">
-              RESEPSI
-            </h2>
-            <Calendar className="h-6 w-6 text-pink-500" />
+          <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-white mb-8 font-light tracking-wider">
+            Akad Nikah
+          </h2>
+          
+          <div className="max-w-2xl mx-auto space-y-6">
+            <div className="text-center">
+              <p className="text-3xl md:text-4xl font-serif text-white mb-2 font-light">
+                {format(new Date(eventDetails.akadNikah.date), 'EEEE, MMMM', { locale: id })}
+              </p>
+              <p className="text-6xl md:text-8xl font-serif text-white mb-2 font-light">
+                {format(new Date(eventDetails.akadNikah.date), 'd', { locale: id })}
+                <sup className="text-2xl md:text-3xl">th</sup>
+              </p>
+              <p className="text-3xl md:text-4xl font-serif text-white font-light">
+                {format(new Date(eventDetails.akadNikah.date), 'yyyy', { locale: id })}
+              </p>
+            </div>
+
+            <div className="text-center py-6">
+              <p className="text-xl md:text-2xl text-white/90 font-light">
+                {eventDetails.akadNikah.time}
+              </p>
+            </div>
+
+            <div className="text-center">
+              <h3 className="text-2xl md:text-3xl font-serif text-white mb-4 font-light">
+                {eventDetails.akadNikah.venue}
+              </h3>
+              <div className="text-white/80 text-base md:text-lg space-y-1 mb-6">
+                {eventDetails.akadNikah.address.split(',').map((line, index) => (
+                  <p key={index} className="font-light">
+                    {line.trim()}
+                  </p>
+                ))}
+              </div>
+              
+              <Button
+                onClick={() => handleGoogleMaps(
+                  eventDetails.akadNikah.googleMapsUrl, 
+                  eventDetails.akadNikah.venue, 
+                  eventDetails.akadNikah.address
+                )}
+                className="bg-transparent hover:bg-white/10 backdrop-blur-sm text-white border border-white/50 px-8 py-3 rounded-none text-base font-light tracking-wider"
+                variant="outline"
+              >
+                View Maps
+              </Button>
+            </div>
           </div>
         </motion.div>
 
+        {/* Resepsi */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-700 max-w-2xl mx-auto"
+          className="text-center"
         >
-          {/* Date */}
-          <div className="text-center mb-6">
-            <p className="text-xl md:text-2xl font-semibold text-white">
-              {format(new Date(eventDetails.date), 'EEEE, d MMMM yyyy', { locale: id }).toUpperCase()}
-            </p>
-          </div>
-
-          {/* Time */}
-          <div className="text-center mb-6">
-            <p className="text-lg md:text-xl text-gray-300">
-              {eventDetails.time} WIB - 20:00 WIB
-            </p>
-          </div>
-
-          {/* Venue */}
-          <div className="text-center mb-6">
-            <p className="text-xl md:text-2xl font-semibold text-white">
-              {eventDetails.venue.toUpperCase()}
-            </p>
-          </div>
-
-          {/* Address */}
-          <div className="text-center mb-8">
-            <div className="text-gray-300 space-y-1">
-              {eventDetails.address.split(',').map((line, index) => (
-                <p key={index} className="text-sm md:text-base">
-                  {line.trim()}
-                </p>
-              ))}
+          <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-white mb-8 font-light tracking-wider">
+            Resepsi
+          </h2>
+          
+          <div className="max-w-2xl mx-auto space-y-6">
+            <div className="text-center">
+              <p className="text-3xl md:text-4xl font-serif text-white mb-2 font-light">
+                {format(new Date(eventDetails.resepsi.date), 'EEEE, MMMM', { locale: id })}
+              </p>
+              <p className="text-6xl md:text-8xl font-serif text-white mb-2 font-light">
+                {format(new Date(eventDetails.resepsi.date), 'd', { locale: id })}
+                <sup className="text-2xl md:text-3xl">th</sup>
+              </p>
+              <p className="text-3xl md:text-4xl font-serif text-white font-light">
+                {format(new Date(eventDetails.resepsi.date), 'yyyy', { locale: id })}
+              </p>
             </div>
-          </div>
 
-          {/* Google Maps Button */}
-          <div className="text-center">
-            <Button
-              onClick={handleGoogleMaps}
-              className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg"
-            >
-              <ExternalLink className="h-4 w-4 mr-2" />
-              GOOGLE MAPS
-            </Button>
-          </div>
-
-          {/* Additional Info (if provided) */}
-          {eventDetails.dressCode && (
-            <div className="mt-6 p-4 bg-gray-700 rounded-lg">
-              <h4 className="font-semibold text-white mb-2">Dress Code</h4>
-              <p className="text-gray-300">{eventDetails.dressCode}</p>
+            <div className="text-center py-6">
+              <p className="text-xl md:text-2xl text-white/90 font-light">
+                {eventDetails.resepsi.time}
+              </p>
             </div>
-          )}
 
-          {eventDetails.additionalInfo && (
-            <div className="mt-4 p-4 bg-gray-700 rounded-lg">
-              <h4 className="font-semibold text-white mb-2">Additional Information</h4>
-              <p className="text-gray-300 text-sm">{eventDetails.additionalInfo}</p>
-            </div>
-          )}
-
-          {/* RSVP Button */}
-          {onRSVP && (
-            <div className="mt-8 text-center">
+            <div className="text-center">
+              <h3 className="text-2xl md:text-3xl font-serif text-white mb-4 font-light">
+                {eventDetails.resepsi.venue}
+              </h3>
+              <div className="text-white/80 text-base md:text-lg space-y-1 mb-6">
+                {eventDetails.resepsi.address.split(',').map((line, index) => (
+                  <p key={index} className="font-light">
+                    {line.trim()}
+                  </p>
+                ))}
+              </div>
+              
               <Button
-                onClick={onRSVP}
-                className="bg-pink-600 hover:bg-pink-700 text-white px-8 py-4 text-lg font-semibold rounded-lg"
+                onClick={() => handleGoogleMaps(
+                  eventDetails.resepsi.googleMapsUrl, 
+                  eventDetails.resepsi.venue, 
+                  eventDetails.resepsi.address
+                )}
+                className="bg-transparent hover:bg-white/10 backdrop-blur-sm text-white border border-white/50 px-8 py-3 rounded-none text-base font-light tracking-wider"
+                variant="outline"
               >
-                <Heart className="h-5 w-5 mr-2" />
-                {rsvpButtonText}
+                View Maps
               </Button>
             </div>
-          )}
+          </div>
         </motion.div>
       </div>
     </section>

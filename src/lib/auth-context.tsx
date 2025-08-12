@@ -18,51 +18,56 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const isAuthenticated = !!user;
 
-  useEffect(() => {
-    const initAuth = async () => {
-      if (apiClient.isAuthenticated()) {
-        try {
-          const response = await apiClient.getCurrentUser();
-          setUser(response.user);
-        } catch (error) {
-          console.error('Auth initialization failed:', error);
-          apiClient.clearToken();
-        }
+  // Function to check auth state
+  const checkAuthState = async () => {
+    if (apiClient.isAuthenticated()) {
+      try {
+        const response = await apiClient.getCurrentUser();
+        setUser(response.user);
+      } catch (error) {
+        console.error('Auth check failed:', error);
+        apiClient.clearToken();
+        setUser(null);
       }
-      setLoading(false);
+    } else {
+      setUser(null);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    checkAuthState();
+
+    // Listen for storage events (token changes)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'auth_token') {
+        checkAuthState();
+      }
     };
 
-    initAuth();
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const login = async (email: string, password: string) => {
-    try {
-      const response = await apiClient.login(email, password);
-      setUser(response.user);
-    } catch (error) {
-      throw error;
-    }
+    const response = await apiClient.login(email, password);
+    setUser(response.user);
   };
 
   const register = async (email: string, password: string, name: string) => {
-    try {
-      const response = await apiClient.register(email, password, name);
-      setUser(response.user);
-    } catch (error) {
-      throw error;
-    }
+    const response = await apiClient.register(email, password, name);
+    setUser(response.user);
   };
 
   const logout = async () => {
     try {
       await apiClient.logout();
-      setUser(null);
     } catch (error) {
       console.error('Logout error:', error);
-      // Still clear local state even if API call fails
-      apiClient.clearToken();
-      setUser(null);
     }
+    // Always clear local state
+    apiClient.clearToken();
+    setUser(null);
   };
 
   const value: AuthContextType = {

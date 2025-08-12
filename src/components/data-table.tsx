@@ -124,7 +124,7 @@ function DragHandle({ id }: { id: number }) {
       className="text-muted-foreground size-7 hover:bg-transparent"
     >
       <IconGripVertical className="text-muted-foreground size-3" />
-      <span className="sr-only">Drag to reorder</span>
+      <span className="sr-only">Tarik untuk mengatur ulang</span>
     </Button>
   )
 }
@@ -138,7 +138,7 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   
   {
     accessorKey: "title",
-    header: "Title",
+    header: "Judul",
     cell: ({ row }) => {
       return <TableCellViewer item={row.original} />
     },
@@ -146,14 +146,14 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
   },
   {
     accessorKey: "visitors",
-    header: () => <div className="w-full text-center">Visitors</div>,
+    header: () => <div className="w-full text-center">Pengunjung</div>,
     cell: ({ row }) => (
       <form
         onSubmit={(e) => {
           e.preventDefault()
           toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.header}`,
-            success: "Done",
+            loading: `Menyimpan ${row.original.header}`,
+            success: "Selesai",
             error: "Error",
           })
         }}
@@ -633,28 +633,28 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="type">Type</Label>
+                <Label htmlFor="type">Tipe</Label>
                 <Select defaultValue={item.type}>
                   <SelectTrigger id="type" className="w-full">
-                    <SelectValue placeholder="Select a type" />
+                    <SelectValue placeholder="Pilih tipe" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="Table of Contents">
-                      Table of Contents
+                      Daftar Isi
                     </SelectItem>
                     <SelectItem value="Executive Summary">
-                      Executive Summary
+                      Ringkasan Eksekutif
                     </SelectItem>
                     <SelectItem value="Technical Approach">
-                      Technical Approach
+                      Pendekatan Teknis
                     </SelectItem>
-                    <SelectItem value="Design">Design</SelectItem>
-                    <SelectItem value="Capabilities">Capabilities</SelectItem>
+                    <SelectItem value="Design">Desain</SelectItem>
+                    <SelectItem value="Capabilities">Kemampuan</SelectItem>
                     <SelectItem value="Focus Documents">
-                      Focus Documents
+                      Dokumen Fokus
                     </SelectItem>
-                    <SelectItem value="Narrative">Narrative</SelectItem>
-                    <SelectItem value="Cover Page">Cover Page</SelectItem>
+                    <SelectItem value="Narrative">Narasi</SelectItem>
+                    <SelectItem value="Cover Page">Halaman Sampul</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -662,12 +662,12 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                 <Label htmlFor="status">Status</Label>
                 <Select defaultValue={item.status}>
                   <SelectTrigger id="status" className="w-full">
-                    <SelectValue placeholder="Select a status" />
+                    <SelectValue placeholder="Pilih status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="Done">Done</SelectItem>
-                    <SelectItem value="In Progress">In Progress</SelectItem>
-                    <SelectItem value="Not Started">Not Started</SelectItem>
+                    <SelectItem value="Done">Selesai</SelectItem>
+                    <SelectItem value="In Progress">Dalam Proses</SelectItem>
+                    <SelectItem value="Not Started">Belum Dimulai</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -678,15 +678,15 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                 <Input id="target" defaultValue={item.target} />
               </div>
               <div className="flex flex-col gap-3">
-                <Label htmlFor="limit">Limit</Label>
+                <Label htmlFor="limit">Batas</Label>
                 <Input id="limit" defaultValue={item.limit} />
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="reviewer">Reviewer</Label>
+              <Label htmlFor="reviewer">Peninjau</Label>
               <Select defaultValue={item.reviewer}>
                 <SelectTrigger id="reviewer" className="w-full">
-                  <SelectValue placeholder="Select a reviewer" />
+                  <SelectValue placeholder="Pilih peninjau" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="Eddie Lake">Eddie Lake</SelectItem>
@@ -700,9 +700,9 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
           </form>
         </div>
         <DrawerFooter>
-          <Button>Submit</Button>
+          <Button>Kirim</Button>
           <DrawerClose asChild>
-            <Button variant="outline">Done</Button>
+            <Button variant="outline">Selesai</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>

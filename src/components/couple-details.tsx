@@ -6,7 +6,7 @@ export function CoupleDetails() {
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-6xl w-full space-y-12">
         <div className="text-center space-y-4">
-          <h2 className="text-4xl font-serif text-gray-800">Meet the Couple</h2>
+          <h2 className="text-4xl font-serif text-gray-800">Profil Pasangan</h2>
           <div className="w-24 h-px bg-rose-300 mx-auto"></div>
         </div>
 
@@ -19,10 +19,9 @@ export function CoupleDetails() {
               </div>
               <div className="space-y-4">
                 <h3 className="text-3xl font-serif text-gray-800">Sarah Elizabeth</h3>
-                <p className="text-rose-600 font-medium">The Bride</p>
+                <p className="text-rose-600 font-medium">Pengantin Wanita</p>
                 <p className="text-gray-600 leading-relaxed">
-                  Daughter of Mr. & Mrs. Robert Johnson. Sarah is a passionate photographer who loves capturing life's
-                  beautiful moments. She enjoys hiking, reading, and spending time with her rescue dog, Luna.
+                  Putri dari Bapak & Ibu Robert Johnson. Sarah adalah seorang fotografer yang bersemangat dalam menangkap momen-momen indah dalam hidup. Dia menyukai mendaki, membaca, dan menghabiskan waktu bersama anjing peliharaannya, Luna.
                 </p>
               </div>
             </CardContent>
@@ -36,10 +35,9 @@ export function CoupleDetails() {
               </div>
               <div className="space-y-4">
                 <h3 className="text-3xl font-serif text-gray-800">John Michael</h3>
-                <p className="text-blue-600 font-medium">The Groom</p>
+                <p className="text-rose-600 font-medium">Pengantin Pria</p>
                 <p className="text-gray-600 leading-relaxed">
-                  Son of Mr. & Mrs. David Smith. John is a software engineer who loves building things and solving
-                  problems. He enjoys cooking, playing guitar, and exploring new coffee shops around the city.
+                  Putra dari Bapak & Ibu William Smith. John adalah seorang arsitek yang kreatif dengan hasrat untuk desain dan inovasi. Dia menikmati bermain gitar, memasak, dan petualangan luar ruangan.
                 </p>
               </div>
             </CardContent>

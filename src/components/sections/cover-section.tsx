@@ -103,7 +103,7 @@ export function CoverSection() {
 
           <div className="space-y-2">
             <Label htmlFor="countdown-datetime" className="text-base font-medium">
-              Tanggal Acara Countdown
+              Jam Acara Dimulai
             </Label>
             <div className="relative">
               <Input 

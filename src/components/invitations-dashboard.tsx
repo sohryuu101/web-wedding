@@ -74,7 +74,7 @@ export function InvitationsDashboard() {
   }
 
   const getStatusText = (published: boolean) => {
-    return published ? "published" : "draft"
+    return published ? "dipublikasikan" : "draf"
   }
 
   const handleEdit = () => {
@@ -82,7 +82,7 @@ export function InvitationsDashboard() {
   }
 
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete your invitation?")) {
+    if (window.confirm("Apakah Anda yakin ingin menghapus undangan ini?")) {
       deleteMutation.mutate()
     }
   }
@@ -124,8 +124,8 @@ export function InvitationsDashboard() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <p className="text-red-600 mb-4">Failed to load invitation</p>
-          <Button onClick={() => window.location.reload()}>Retry</Button>
+          <p className="text-red-600 mb-4">Gagal memuat undangan</p>
+          <Button onClick={() => window.location.reload()}>Coba Lagi</Button>
         </div>
       </div>
     )
@@ -140,20 +140,20 @@ export function InvitationsDashboard() {
             <div className="flex items-center space-x-4">
               <Heart className="h-8 w-8 text-rose-500" />
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">My Wedding Invitation</h1>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Undangan Pernikahan Saya</h1>
                 <p className="text-xs sm:text-sm text-gray-500">
-                  Welcome back, {user?.name}
+                  Selamat datang kembali, {user?.name}
                 </p>
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
               <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
                 <Bell className="h-4 w-4 mr-2" />
-                Notifications
+                Notifikasi
               </Button>
               <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
                 <Settings className="h-4 w-4 mr-2" />
-                Settings
+                Pengaturan
               </Button>
               <Button
                 variant="outline"
@@ -162,12 +162,12 @@ export function InvitationsDashboard() {
                 className="flex-1 sm:flex-none"
               >
                 <LogOut className="h-4 w-4 mr-2" />
-                Logout
+                Keluar
               </Button>
               {!hasInvitation && (
                 <Button onClick={handleCreateInvitation} className="flex-1 sm:flex-none">
                   <Plus className="h-4 w-4 mr-2" />
-                  Create Invitation
+                  Buat Undangan
                 </Button>
               )}
             </div>
@@ -186,46 +186,46 @@ export function InvitationsDashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {invitation.is_published ? 'Live' : 'Draft'}
+                  {invitation.is_published ? 'Aktif' : 'Draf'}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  {invitation.is_published ? 'Published and visible' : 'Not published yet'}
+                  {invitation.is_published ? 'Dipublikasikan dan dapat dilihat' : 'Belum dipublikasikan'}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Views</CardTitle>
+                <CardTitle className="text-sm font-medium">Dilihat</CardTitle>
                 <Eye className="h-4 w-4 text-blue-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{invitation.views}</div>
-                <p className="text-xs text-muted-foreground">Total page views</p>
+                <p className="text-xs text-muted-foreground">Total dilihat</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">RSVPs</CardTitle>
+                <CardTitle className="text-sm font-medium">RSVP</CardTitle>
                 <Heart className="h-4 w-4 text-green-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{invitation.rsvps}</div>
-                <p className="text-xs text-muted-foreground">Confirmed responses</p>
+                <p className="text-xs text-muted-foreground">Konfirmasi kehadiran</p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Response Rate</CardTitle>
+                <CardTitle className="text-sm font-medium">Tingkat Respons</CardTitle>
                 <Calendar className="h-4 w-4 text-purple-600" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
                   {invitation.views > 0 ? `${((invitation.rsvps / invitation.views) * 100).toFixed(1)}%` : '0%'}
                 </div>
-                <p className="text-xs text-muted-foreground">RSVP conversion rate</p>
+                <p className="text-xs text-muted-foreground">Tingkat konversi RSVP</p>
               </CardContent>
             </Card>
           </div>
@@ -256,27 +256,27 @@ export function InvitationsDashboard() {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={handlePreview}>
                         <Eye className="h-4 w-4 mr-2" />
-                        Preview
+                        Pratinjau
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={() => window.open(`/invitation/${invitation.slug}`, '_blank')}>
                         <Eye className="h-4 w-4 mr-2" />
-                        View Live
+                        Lihat Langsung
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleEdit}>
                         <Edit className="h-4 w-4 mr-2" />
-                        Edit
+                        Ubah
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleTogglePublish}>
                         <Share2 className="h-4 w-4 mr-2" />
-                        {invitation.is_published ? 'Unpublish' : 'Publish'}
+                        {invitation.is_published ? 'Batalkan Publikasi' : 'Publikasikan'}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={copyInvitationLink}>
                         <Copy className="h-4 w-4 mr-2" />
-                        Copy Link
+                        Salin Tautan
                       </DropdownMenuItem>
                       <DropdownMenuItem>
                         <Download className="h-4 w-4 mr-2" />
-                        Export
+                        Ekspor
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
                       <DropdownMenuItem 
@@ -284,7 +284,7 @@ export function InvitationsDashboard() {
                         onClick={handleDelete}
                       >
                         <Trash2 className="h-4 w-4 mr-2" />
-                        Delete
+                        Hapus
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -310,17 +310,17 @@ export function InvitationsDashboard() {
                 <div className="grid grid-cols-2 gap-4 text-center">
                   <div>
                     <p className="text-2xl font-bold text-gray-900">{invitation.views}</p>
-                    <p className="text-xs text-gray-500">Views</p>
+                    <p className="text-xs text-gray-500">Dilihat</p>
                   </div>
                   <div>
                     <p className="text-2xl font-bold text-green-600">{invitation.rsvps}</p>
-                    <p className="text-xs text-gray-500">RSVPs</p>
+                    <p className="text-xs text-gray-500">RSVP</p>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-2">
                   <p className="text-xs text-gray-500">
-                    Modified {new Date(invitation.updated_at).toLocaleDateString()}
+                    Diubah {new Date(invitation.updated_at).toLocaleDateString()}
                   </p>
                   <div className="flex space-x-2">
                     <Button variant="outline" size="sm" onClick={handlePreview}>
@@ -335,10 +335,10 @@ export function InvitationsDashboard() {
                 {invitation.is_published && (
                   <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
                     <p className="text-sm text-green-800 font-medium">
-                      🎉 Your invitation is live!
+                      🎉 Undangan Anda sudah aktif!
                     </p>
                     <p className="text-xs text-green-600 mt-1">
-                      Share this link: <code className="bg-green-100 px-1 rounded">
+                      Bagikan tautan ini: <code className="bg-green-100 px-1 rounded">
                         {window.location.origin}/invitation/{invitation.slug}
                       </code>
                     </p>
@@ -351,15 +351,15 @@ export function InvitationsDashboard() {
           /* Empty State */
           <div className="text-center py-12">
             <Heart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Create Your Wedding Invitation</h3>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Buat Undangan Pernikahan Anda</h3>
             <p className="text-gray-500 mb-4">
-              Get started by creating your beautiful wedding invitation.
+              Mulai dengan membuat undangan pernikahan yang indah.
               <br />
-              You can create one invitation per account.
+              Anda dapat membuat satu undangan per akun.
             </p>
             <Button onClick={handleCreateInvitation}>
               <Plus className="h-4 w-4 mr-2" />
-              Create My Wedding Invitation
+              Buat Undangan Pernikahan Saya
             </Button>
           </div>
         )}

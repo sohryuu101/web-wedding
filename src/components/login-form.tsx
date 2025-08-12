@@ -13,6 +13,7 @@ import { Label } from "@/components/ui/label"
 import { useAuth } from "@/lib/auth-context"
 import { useNavigate } from "@tanstack/react-router"
 import { apiClient } from "@/lib/api"
+import { Loader2 } from "lucide-react"
 
 export function LoginForm({
   className,
@@ -70,12 +71,12 @@ export function LoginForm({
       <Card>
         <CardHeader>
           <CardTitle>
-            {isRegisterMode ? "Create your account" : "Login to your account"}
+            {isRegisterMode ? "Buat Akun Anda" : "Masuk ke Akun Anda"}
           </CardTitle>
           <CardDescription>
             {isRegisterMode 
-              ? "Enter your details below to create your account"
-              : "Enter your email below to login to your account"
+              ? "Masukkan detail Anda di bawah ini untuk membuat akun"
+              : "Masukkan email Anda di bawah ini untuk masuk ke akun Anda"
             }
           </CardDescription>
         </CardHeader>
@@ -90,7 +91,7 @@ export function LoginForm({
               
               {isRegisterMode && (
                 <div className="grid gap-3">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">Nama Lengkap</Label>
                   <Input
                     id="name"
                     type="text"
@@ -107,7 +108,7 @@ export function LoginForm({
                 <Input
                   id="email"
                   type="email"
-                  placeholder="m@example.com"
+                  placeholder="email@contoh.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -116,7 +117,7 @@ export function LoginForm({
               
               <div className="grid gap-3">
                 <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
+                  <Label htmlFor="password">Kata Sandi</Label>
                   {!isRegisterMode && (
                     <a
                       href="#"
@@ -129,6 +130,7 @@ export function LoginForm({
                 <Input 
                   id="password" 
                   type="password" 
+                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required 
@@ -143,40 +145,32 @@ export function LoginForm({
               
               <div className="flex flex-col gap-3">
                 <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading 
-                    ? "Please wait..." 
-                    : isRegisterMode 
-                      ? "Create Account" 
-                      : "Login"
-                  }
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Memproses...
+                    </>
+                  ) : isRegisterMode ? (
+                    "Daftar"
+                  ) : (
+                    "Masuk"
+                  )}
                 </Button>
               </div>
             </div>
             
             <div className="mt-4 text-center text-sm">
-              {isRegisterMode ? (
-                <>
-                  Already have an account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => setIsRegisterMode(false)}
-                    className="underline underline-offset-4 hover:text-primary"
-                  >
-                    Sign in
-                  </button>
-                </>
-              ) : (
-                <>
-                  Don&apos;t have an account?{" "}
-                  <button
-                    type="button"
-                    onClick={() => setIsRegisterMode(true)}
-                    className="underline underline-offset-4 hover:text-primary"
-                  >
-                    Sign up
-                  </button>
-                </>
-              )}
+              <Button
+                variant="link"
+                className="px-0"
+                onClick={() => setIsRegisterMode(!isRegisterMode)}
+              >
+                {isRegisterMode ? (
+                  "Sudah punya akun? Masuk di sini"
+                ) : (
+                  "Belum punya akun? Daftar di sini"
+                )}
+              </Button>
             </div>
           </form>
         </CardContent>
