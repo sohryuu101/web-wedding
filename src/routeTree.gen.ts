@@ -16,6 +16,7 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as InvitationTemplateRouteImport } from './routes/invitation/template'
 import { Route as InvitationSlugRouteImport } from './routes/invitation/$slug'
 import { Route as DashboardEditRouteImport } from './routes/dashboard/edit'
 
@@ -54,6 +55,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/dashboard/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InvitationTemplateRoute = InvitationTemplateRouteImport.update({
+  id: '/invitation/template',
+  path: '/invitation/template',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InvitationSlugRoute = InvitationSlugRouteImport.update({
   id: '/invitation/$slug',
   path: '/invitation/$slug',
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/setup': typeof SetupRoute
   '/dashboard/edit': typeof DashboardEditRoute
   '/invitation/$slug': typeof InvitationSlugRoute
+  '/invitation/template': typeof InvitationTemplateRoute
   '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/setup': typeof SetupRoute
   '/dashboard/edit': typeof DashboardEditRoute
   '/invitation/$slug': typeof InvitationSlugRoute
+  '/invitation/template': typeof InvitationTemplateRoute
   '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/setup': typeof SetupRoute
   '/dashboard/edit': typeof DashboardEditRoute
   '/invitation/$slug': typeof InvitationSlugRoute
+  '/invitation/template': typeof InvitationTemplateRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/setup'
     | '/dashboard/edit'
     | '/invitation/$slug'
+    | '/invitation/template'
     | '/dashboard'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/setup'
     | '/dashboard/edit'
     | '/invitation/$slug'
+    | '/invitation/template'
     | '/dashboard'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/setup'
     | '/dashboard/edit'
     | '/invitation/$slug'
+    | '/invitation/template'
     | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +156,7 @@ export interface RootRouteChildren {
   SetupRoute: typeof SetupRoute
   DashboardEditRoute: typeof DashboardEditRoute
   InvitationSlugRoute: typeof InvitationSlugRoute
+  InvitationTemplateRoute: typeof InvitationTemplateRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
@@ -198,6 +211,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/invitation/template': {
+      id: '/invitation/template'
+      path: '/invitation/template'
+      fullPath: '/invitation/template'
+      preLoaderRoute: typeof InvitationTemplateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/invitation/$slug': {
       id: '/invitation/$slug'
       path: '/invitation/$slug'
@@ -224,6 +244,7 @@ const rootRouteChildren: RootRouteChildren = {
   SetupRoute: SetupRoute,
   DashboardEditRoute: DashboardEditRoute,
   InvitationSlugRoute: InvitationSlugRoute,
+  InvitationTemplateRoute: InvitationTemplateRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 export const routeTree = rootRouteImport

@@ -1,9 +1,10 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useMutation } from '@tanstack/react-query'
-import { WeddingInvitationTemplate, type RSVPFormData } from '@/components/wedding-invitation-template'
+import { TemplateSelector } from '@/components/template-selector'
 import { apiClient } from '@/lib/api'
 import { Button } from '@/components/ui/button'
 import { Heart } from 'lucide-react'
+import type { RSVPFormData } from '@/components/wedding-invitation-template'
 
 export const Route = createFileRoute('/invitation/$slug')({
   component: InvitationPage,
@@ -57,7 +58,7 @@ function InvitationPage() {
   }
 
   return (
-    <WeddingInvitationTemplate
+    <TemplateSelector
       invitation={invitationData.invitation}
       onRSVP={handleRSVP}
       isPreview={false}

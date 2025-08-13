@@ -26,7 +26,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
     main_title: "Simpan Tanggal",
     subtitle: "Kami Akan Menikah!",
     message: "Bergabunglah bersama kami di hari spesial kami...",
-    theme: "Taman Mawar",
+    theme: "Modern Elegance",
     custom_slug: "",
     // Couple profile fields
     bride_photo: "",
@@ -73,7 +73,7 @@ export function CreateInvitationDialog({ open, onOpenChange }: CreateInvitationD
       main_title: "Simpan Tanggal",
       subtitle: "Kami Akan Menikah!",
       message: "Bergabunglah bersama kami di hari spesial kami...",
-      theme: "Taman Mawar",
+      theme: "Modern Elegance",
       custom_slug: "",
       // Couple profile fields
       bride_photo: "",

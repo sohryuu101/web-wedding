@@ -25,8 +25,10 @@ import {
   Gift, 
   Music,
   Palette,
-  FileText
+  FileText,
+  Eye
 } from "lucide-react"
+import { InvitationPreview } from "@/components/invitation-preview"
 
 export const Route = createFileRoute("/dashboard/edit")({
   component: RouteComponent,
@@ -147,7 +149,7 @@ function RouteComponent() {
     main_title: "Simpan Tanggal",
     subtitle: "Kami Akan Menikah!",
     message: "Bergabunglah bersama kami di hari spesial kami...",
-    theme: "Taman Mawar",
+    theme: "Modern Elegance",
     // Couple profile fields
     bride_photo: "",
     groom_photo: "",
@@ -172,6 +174,7 @@ function RouteComponent() {
     cover_video: "",
     event_start_time: ""
   })
+  const [showPreview, setShowPreview] = useState(false)
 
   // Fetch current invitation data
   const { data: invitationData, isLoading, error } = useQuery({
@@ -192,7 +195,7 @@ function RouteComponent() {
         main_title: invitation.main_title || "Simpan Tanggal",
         subtitle: invitation.subtitle || "Kami Akan Menikah!",
         message: invitation.message || "Bergabunglah bersama kami di hari spesial kami...",
-        theme: invitation.theme || "Taman Mawar",
+        theme: invitation.theme || "Modern Elegance",
                  // Couple profile fields
          bride_photo: invitation.bride_photo || "",
          groom_photo: invitation.groom_photo || "",
@@ -240,7 +243,38 @@ function RouteComponent() {
   }
 
   const handleSave = () => {
-    updateMutation.mutate(formData)
+    updateMutation.mutate(formData, {
+      onSuccess: () => {
+        toast.success("Undangan berhasil diperbarui!")
+      }
+    })
+  }
+
+  // Create a preview data object that combines the invitation data with the current form data
+  const getPreviewData = () => {
+    if (!invitation) return null;
+    
+    return {
+      ...invitation,
+      ...formData,
+      // Handle nested objects properly
+      bride_parents: {
+        ...invitation.bride_parents,
+        ...formData.bride_parents
+      },
+      groom_parents: {
+        ...invitation.groom_parents,
+        ...formData.groom_parents
+      },
+      bride_social_media: {
+        ...invitation.bride_social_media,
+        ...formData.bride_social_media
+      },
+      groom_social_media: {
+        ...invitation.groom_social_media,
+        ...formData.groom_social_media
+      }
+    };
   }
 
   const renderSectionContent = (sectionId: string) => {
@@ -331,17 +365,26 @@ function RouteComponent() {
                   <SelectValue placeholder="Pilih tema" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Taman Mawar">Taman Mawar</SelectItem>
-                  <SelectItem value="Angin Laut">Angin Laut</SelectItem>
-                  <SelectItem value="Senja Keemasan">Senja Keemasan</SelectItem>
-                  <SelectItem value="Negeri Salju">Negeri Salju</SelectItem>
-                  <SelectItem value="Hutan Hijau">Hutan Hijau</SelectItem>
-                  <SelectItem value="Impian Lavender">Impian Lavender</SelectItem>
-                  <SelectItem value="Elegan Klasik">Elegan Klasik</SelectItem>
-                  <SelectItem value="Minimalis Modern">Minimalis Modern</SelectItem>
+                  <SelectItem value="Modern Elegance">Modern Elegance</SelectItem>
+                  <SelectItem value="Scrapbook">Scrapbook</SelectItem>
+                  <SelectItem value="Pastel Minimalis">Pastel Minimalis</SelectItem>
+                  <SelectItem value="Flower Garden">Flower Garden</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+            <Button 
+              onClick={() => {
+                updateMutation.mutate(formData, {
+                  onSuccess: () => {
+                    toast.success("Tema undangan berhasil diubah!")
+                  }
+                })
+              }}
+              disabled={updateMutation.isPending}
+              className="w-full"
+            >
+              {updateMutation.isPending ? "Menyimpan..." : "Simpan Tema"}
+            </Button>
           </div>
         )
 
@@ -583,6 +626,10 @@ function RouteComponent() {
                 <Button variant="outline" onClick={() => navigate({ to: "/dashboard" })}>
                   Kembali
                 </Button>
+                <Button onClick={() => setShowPreview(true)} variant="outline">
+                  <Eye className="h-4 w-4 mr-2" />
+                  Pratinjau
+                </Button>
                 <Button onClick={() => navigate({ to: `/invitation/${invitation.slug}` })} variant="outline">
                   Lihat Undangan
                 </Button>
@@ -635,13 +682,15 @@ function RouteComponent() {
                         {renderSectionContent(section.id)}
                       </div>
                       <DialogFooter>
-                        <Button 
-                          onClick={handleSave} 
-                          disabled={updateMutation.isPending}
-                          className="w-full"
-                        >
-                          {updateMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
-                        </Button>
+                        {section.id !== 'theme' && (
+                          <Button 
+                            onClick={handleSave} 
+                            disabled={updateMutation.isPending}
+                            className="w-full"
+                          >
+                            {updateMutation.isPending ? "Menyimpan..." : "Simpan Perubahan"}
+                          </Button>
+                        )}
                       </DialogFooter>
                     </DialogContent>
                   </Dialog>
@@ -651,6 +700,13 @@ function RouteComponent() {
           </div>
         </main>
       </div>
+      
+      {/* Preview Modal */}
+      <InvitationPreview
+        invitation={getPreviewData()}
+        open={showPreview}
+        onOpenChange={setShowPreview}
+      />
     </div>
   )
 }

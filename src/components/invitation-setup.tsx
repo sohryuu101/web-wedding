@@ -60,7 +60,7 @@ export function InvitationSetup() {
       bride_name: formData.bride_name.trim(),
       groom_name: formData.groom_name.trim(),
       wedding_date: new Date().toISOString().split('T')[0], // Set default date to today
-      theme: "Rose Garden", // Set default theme
+      theme: "Modern Elegance", // Set default theme
       ...(formData.custom_slug?.trim() && { custom_slug: formData.custom_slug.trim() }),
     }
 

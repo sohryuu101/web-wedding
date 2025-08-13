@@ -22,7 +22,7 @@ CREATE TABLE invitations (
   main_title TEXT DEFAULT 'Save The Date',
   subtitle TEXT DEFAULT 'We''re Getting Married!',
   message TEXT DEFAULT 'Join us for our special day...',
-  theme TEXT DEFAULT 'Rose Garden',
+  theme TEXT DEFAULT 'Modern Elegance',
   -- Couple profile fields
   bride_photo TEXT,
   groom_photo TEXT,
@@ -65,4 +65,4 @@ INSERT INTO users (email, password, name) VALUES
 ('demo@example.com', '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Demo User');
 
 INSERT INTO invitations (user_id, slug, bride_name, groom_name, wedding_date, venue, theme) VALUES 
-(1, 'sarah-john-wedding', 'Sarah Johnson', 'John Smith', '2024-06-15', 'Grand Oak Gardens', 'Rose Garden');
+(1, 'sarah-john-wedding', 'Sarah Johnson', 'John Smith', '2024-06-15', 'Grand Oak Gardens', 'Modern Elegance');

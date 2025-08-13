@@ -1,4 +1,5 @@
-import { WeddingInvitationTemplate, type InvitationData } from './wedding-invitation-template'
+import { TemplateSelector } from './template-selector'
+import type { InvitationData } from './wedding-invitation-template'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 interface InvitationPreviewProps {
@@ -16,7 +17,7 @@ export function InvitationPreview({ invitation, open, onOpenChange }: Invitation
         <DialogHeader className="sr-only">
           <DialogTitle>Invitation Preview</DialogTitle>
         </DialogHeader>
-        <WeddingInvitationTemplate
+        <TemplateSelector
           invitation={invitation}
           isPreview={true}
         />

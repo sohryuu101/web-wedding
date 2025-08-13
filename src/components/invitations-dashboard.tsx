@@ -147,30 +147,30 @@ export function InvitationsDashboard() {
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2 sm:gap-4 w-full sm:w-auto">
-              <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
-                <Bell className="h-4 w-4 mr-2" />
-                Notifikasi
-              </Button>
-              <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
-                <Settings className="h-4 w-4 mr-2" />
-                Pengaturan
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleLogout}
-                className="flex-1 sm:flex-none"
-              >
-                <LogOut className="h-4 w-4 mr-2" />
-                Keluar
-              </Button>
-              {!hasInvitation && (
-                <Button onClick={handleCreateInvitation} className="flex-1 sm:flex-none">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Buat Undangan
+                <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                  <Bell className="h-4 w-4 mr-2" />
+                  Notifikasi
                 </Button>
-              )}
-            </div>
+                <Button variant="outline" size="sm" className="flex-1 sm:flex-none">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Pengaturan
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="flex-1 sm:flex-none"
+                >
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Keluar
+                </Button>
+                {!hasInvitation && (
+                  <Button onClick={handleCreateInvitation} className="flex-1 sm:flex-none">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Buat Undangan
+                  </Button>
+                )}
+              </div>
           </div>
         </div>
       </header>
