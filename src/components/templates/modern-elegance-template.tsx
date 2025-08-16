@@ -1,17 +1,12 @@
 import { Badge } from "@/components/ui/badge"
-import { ThankYouSection } from "../sections/thank-you-section"
-import { CoupleProfilesSection } from "../sections/couple-profiles-section"
-import { LoveStorySection } from "../sections/love-story-section"
 import { EventDetailsSection } from "../sections/event-details-section"
-import { PhotoGallerySection } from "../sections/photo-gallery-section"
-import { VideoGallerySection } from "../sections/video-gallery-section"
-import { LiveStreamingSection } from "../sections/live-streaming-section"
-import { RSVPSection } from "../sections/rsvp-section"
-import { WeddingGiftSection } from "../sections/wedding-gift-section"
-import { WeddingWishSection } from "../sections/wedding-wish-section"
-import { FinalSection } from "../sections/final-section"
+import { ModernEleganceRSVP } from "../sections/modern-elegance-rsvp"
 import { ModernEleganceHeroSection } from "../sections/modern-elegance-hero-section"
 import { ModernEleganceGroomProfileSection } from "../sections/modern-elegance-groom-profile-section"
+import { ModernEleganceBrideProfileSection } from "../sections/modern-elegance-bride-profile-section"
+import { ModernEleganceOurJourneySection } from "../sections/modern-elegance-our-journey"
+import { DateCountdown } from "../sections/modern-elegance-date-countdown"
+import { ReceptionSection } from "../sections/modern-elegance-reception"
 
 export interface InvitationData {
   id: number
@@ -158,16 +153,16 @@ export function ModernEleganceTemplate({
     }
   }
 
-  // Transform RSVP data to match the main interface
-  const handleRSVPFromSection = async (data: { name: string; message: string; attendance: "hadir" | "tidak_hadir"; totalGuests: number }) => {
+  // Transform RSVP data from modern elegance component
+  const handleModernEleganceRSVP = async (data: { name: string; attendance: "yes" | "no"; guestCount: number }) => {
     const transformedData: RSVPFormData = {
       guest_name: data.name,
       guest_email: undefined,
       guest_phone: undefined,
-      attendance: data.attendance === "hadir" ? "yes" : "no",
-      guest_count: data.totalGuests,
+      attendance: data.attendance === "yes" ? "yes" : "no",
+      guest_count: data.guestCount,
       dietary_requirements: undefined,
-      message: data.message
+      message: undefined
     }
     await handleRSVP(transformedData)
   }
@@ -213,43 +208,25 @@ export function ModernEleganceTemplate({
 
         {/* All other sections in scrollable container */}
         <div className="relative bg-white">
-          {/* Couple Profiles Section */}
-          <CoupleProfilesSection
-            bride={{
-              name: invitation.bride_name,
-              photo: invitation.bride_photo,
-              parents: invitation.bride_parents || { father: '', mother: '' },
-              socialMedia: invitation.bride_social_media,
-              description: invitation.bride_description,
-              gender: 'female'
-            }}
-            groom={{
-              name: invitation.groom_name,
-              photo: invitation.groom_photo,
-              parents: invitation.groom_parents || { father: '', mother: '' },
-              socialMedia: invitation.groom_social_media,
-              description: invitation.groom_description,
-              gender: 'male'
-            }}
+          {/* Bride Profile Section */}
+          <ModernEleganceBrideProfileSection
+            name={invitation.bride_name}
+            photo={invitation.bride_photo}
+            parents={invitation.bride_parents || { father: '', mother: '' }}
+            socialMedia={invitation.bride_social_media}
+            birthOrder={invitation.bride_birth_order}
           />
 
-          {/* Photo Gallery Section */}
-          {invitation.photo_gallery && invitation.photo_gallery.length > 0 && (
-            <PhotoGallerySection
-              photos={invitation.photo_gallery}
-              title="Our Gallery"
-              subtitle="Our Engagement"
-            />
-          )}
+          {/* Our Journey Section */}
+          <ModernEleganceOurJourneySection />
 
-          {/* Video Gallery Section */}
-          {invitation.video_gallery && invitation.video_gallery.length > 0 && (
-            <VideoGallerySection
-              videos={invitation.video_gallery}
-              title="Our Footage"
-              subtitle="The Pre-Wedding"
-            />
-          )}
+          {/* Reception Section */}
+          <ReceptionSection />
+
+          {/* Date Countdown Section */}
+          <div className="relative bg-white">
+            <DateCountdown weddingDate={invitation.wedding_date} />
+          </div>
 
           {/* Event Details Section */}
           {invitation.event_details && (
@@ -258,70 +235,12 @@ export function ModernEleganceTemplate({
             />
           )}
 
-          {/* Live Streaming Section */}
-          {invitation.live_streaming && (
-            <LiveStreamingSection
-              title="Live Streaming"
-              subtitle="Our Story"
-              storyText={invitation.live_streaming.storyText}
-              streamUrl={invitation.live_streaming.streamUrl}
-              previewImage={invitation.live_streaming.previewImage}
-              photoGallery={invitation.live_streaming.photoGallery}
-            />
-          )}
-
-          {/* Wedding Gift Section */}
-          <WeddingGiftSection
-            title="Wedding Gift"
-            message="Your blessing and coming to our wedding are enough for us. However, if you want to give a gift we provide a Digital Envelope to make it easier for you. thank you"
-            bankAccounts={invitation.bank_accounts || [
-              {
-                bank: "BANK BCA",
-                name: "Muhammad Fanny Al farizzy",
-                number: "8375180797"
-              }
-            ]}
-          />
-
-          {/* Wedding Wish Section */}
-          <WeddingWishSection
-            title="Wedding Wish"
-            wishes={invitation.wedding_wishes}
-          />
-
-          {/* Love Story Section */}
-          {invitation.love_story && invitation.love_story.length > 0 && (
-            <LoveStorySection
-              milestones={invitation.love_story}
-            />
-          )}
-
-          {/* RSVP Section */}
-          <RSVPSection
-            onRSVP={handleRSVPFromSection}
-            existingMessages={[]}
-          />
-
-          {/* Thank You Section */}
-          <ThankYouSection
-            bridePhoto={invitation.bride_photo}
-            groomPhoto={invitation.groom_photo}
-            thankYouMessage={invitation.thank_you_message}
-            coupleNames={`${invitation.bride_name} & ${invitation.groom_name}`}
-          />
-
-          {/* Final Section */}
-          <FinalSection
-            brideName={invitation.bride_name}
-            groomName={invitation.groom_name}
+          {/* Modern Elegance RSVP Section */}
+          <ModernEleganceRSVP
+            onRSVP={handleModernEleganceRSVP}
             weddingDate={invitation.wedding_date}
-            hashtag={invitation.hashtag || "#PromDatetoLifeMate"}
-            poweredBy={invitation.powered_by || {
-              name: "KATSUDOTO",
-              logo: "🤍"
-            }}
-            backgroundImage={invitation.cover_image}
           />
+
         </div>
       </div>
     </div>
