@@ -1,3 +1,4 @@
+import React from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { TemplateSelector } from '@/components/template-selector'
@@ -19,6 +20,18 @@ function InvitationPage() {
     queryKey: ['publicInvitation', slug],
     queryFn: () => apiClient.getPublicInvitation(slug),
   })
+
+  // Track view when invitation is successfully loaded
+  const { mutate: trackView } = useMutation({
+    mutationFn: () => apiClient.trackView(slug),
+  })
+
+  // Track view when invitation data is loaded
+  React.useEffect(() => {
+    if (invitationData?.invitation) {
+      trackView()
+    }
+  }, [invitationData?.invitation, trackView])
 
   // RSVP submission mutation  
   const rsvpMutation = useMutation({

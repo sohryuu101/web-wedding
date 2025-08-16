@@ -19,17 +19,48 @@ publicRoutes.get('/invitation/:slug', async (c) => {
     const slug = c.req.param('slug');
     const db = c.env.DB;
 
-    // Get invitation details (only published ones)
+    // Get invitation details (only published ones) - include all fields like private endpoint
     const invitation = await db.prepare(`
       SELECT id, slug, bride_name, groom_name, wedding_date, venue, 
-             main_title, subtitle, message, theme, cover_image, 
-             views, rsvps, created_at
+             main_title, subtitle, message, theme, cover_image,
+             bride_photo, groom_photo, bride_parents_father, bride_parents_mother,
+             groom_parents_father, groom_parents_mother, bride_social_media_instagram,
+             groom_social_media_instagram, bride_birth_order, groom_birth_order,
+             bride_description, groom_description, cover_video,
+             is_published, views, rsvps, created_at, updated_at
       FROM invitations 
       WHERE slug = ? AND is_published = TRUE
     `).bind(slug).first();
 
     if (!invitation) {
       return c.json({ error: 'Invitation not found or not published' }, 404);
+    }
+
+    // Transform the flat database structure to nested objects for the frontend
+    // (same transformation as in private endpoint)
+    if (invitation) {
+      invitation.bride_parents = {
+        father: invitation.bride_parents_father || '',
+        mother: invitation.bride_parents_mother || ''
+      };
+      invitation.groom_parents = {
+        father: invitation.groom_parents_father || '',
+        mother: invitation.groom_parents_mother || ''
+      };
+      invitation.bride_social_media = {
+        instagram: invitation.bride_social_media_instagram || ''
+      };
+      invitation.groom_social_media = {
+        instagram: invitation.groom_social_media_instagram || ''
+      };
+      
+      // Remove the flat fields
+      delete invitation.bride_parents_father;
+      delete invitation.bride_parents_mother;
+      delete invitation.groom_parents_father;
+      delete invitation.groom_parents_mother;
+      delete invitation.bride_social_media_instagram;
+      delete invitation.groom_social_media_instagram;
     }
 
     return c.json({ invitation });

@@ -187,7 +187,8 @@ function RouteComponent() {
   // Update form data when invitation data is loaded
   useEffect(() => {
     if (invitation) {
-      setFormData({
+      setFormData(prev => ({
+        ...prev,
         bride_name: invitation.bride_name || "",
         groom_name: invitation.groom_name || "",
         wedding_date: invitation.wedding_date || "",
@@ -196,19 +197,19 @@ function RouteComponent() {
         subtitle: invitation.subtitle || "Kami Akan Menikah!",
         message: invitation.message || "Bergabunglah bersama kami di hari spesial kami...",
         theme: invitation.theme || "Modern Elegance",
-                 // Couple profile fields
-         bride_photo: invitation.bride_photo || "",
-         groom_photo: invitation.groom_photo || "",
-         bride_parents: invitation.bride_parents || { father: "", mother: "" },
-         groom_parents: invitation.groom_parents || { father: "", mother: "" },
-         bride_social_media: invitation.bride_social_media || { instagram: "" },
-         groom_social_media: invitation.groom_social_media || { instagram: "" },
-         bride_birth_order: invitation.bride_birth_order || "first",
-         groom_birth_order: invitation.groom_birth_order || "first",
-         bride_description: invitation.bride_description || "",
-         groom_description: invitation.groom_description || "",
-         cover_video: invitation.cover_video || "",
-      })
+        // Couple profile fields
+        bride_photo: invitation.bride_photo || "",
+        groom_photo: invitation.groom_photo || "",
+        bride_parents: invitation.bride_parents || { father: "", mother: "" },
+        groom_parents: invitation.groom_parents || { father: "", mother: "" },
+        bride_social_media: invitation.bride_social_media || { instagram: "" },
+        groom_social_media: invitation.groom_social_media || { instagram: "" },
+        bride_birth_order: invitation.bride_birth_order || "first",
+        groom_birth_order: invitation.groom_birth_order || "first",
+        bride_description: invitation.bride_description || "",
+        groom_description: invitation.groom_description || "",
+        cover_video: invitation.cover_video || "",
+      }))
     }
   }, [invitation])
 
@@ -216,7 +217,11 @@ function RouteComponent() {
   const updateMutation = useMutation({
     mutationFn: (data: UpdateInvitationData) => apiClient.updateInvitation(data),
     onSuccess: () => {
+      // Invalidate both private and public invitation caches
       queryClient.invalidateQueries({ queryKey: ['invitation'] })
+      if (invitation?.slug) {
+        queryClient.invalidateQueries({ queryKey: ['publicInvitation', invitation.slug] })
+      }
       toast.success("Undangan berhasil diperbarui!")
     },
     onError: (error: any) => {
@@ -243,7 +248,10 @@ function RouteComponent() {
   }
 
   const handleSave = () => {
-    updateMutation.mutate(formData, {
+    // Clean formData by removing event_start_time which is not part of UpdateInvitationData
+    const { event_start_time, ...cleanFormData } = formData;
+    
+    updateMutation.mutate(cleanFormData, {
       onSuccess: () => {
         toast.success("Undangan berhasil diperbarui!")
       }
@@ -257,22 +265,20 @@ function RouteComponent() {
     return {
       ...invitation,
       ...formData,
-      // Handle nested objects properly
+      // Handle nested objects properly with fallbacks
       bride_parents: {
-        ...invitation.bride_parents,
-        ...formData.bride_parents
+        father: formData.bride_parents?.father || invitation.bride_parents?.father || "",
+        mother: formData.bride_parents?.mother || invitation.bride_parents?.mother || ""
       },
       groom_parents: {
-        ...invitation.groom_parents,
-        ...formData.groom_parents
+        father: formData.groom_parents?.father || invitation.groom_parents?.father || "",
+        mother: formData.groom_parents?.mother || invitation.groom_parents?.mother || ""
       },
       bride_social_media: {
-        ...invitation.bride_social_media,
-        ...formData.bride_social_media
+        instagram: formData.bride_social_media?.instagram || invitation.bride_social_media?.instagram || ""
       },
       groom_social_media: {
-        ...invitation.groom_social_media,
-        ...formData.groom_social_media
+        instagram: formData.groom_social_media?.instagram || invitation.groom_social_media?.instagram || ""
       }
     };
   }
