@@ -281,7 +281,7 @@ export function ModernEleganceRSVP({
             transition={{ duration: 0.8, delay: 1.2 }}
             onClick={handleConfirm}
             disabled={!attendance || isSubmitting}
-            className={`confirm-button w-[219px] h-[23px] flex-shrink-0 absolute left-[74px] top-[694px] cursor-pointer transition-all duration-200 mb-8 ${
+            className={`confirm-button w-[219px] h-[23px] flex-shrink-0 absolute left-[74px] top-[694px] cursor-pointer transition-all duration-200 mb-8 rounded-[8px] ${
               !attendance || isSubmitting
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-[#3E513C] hover:bg-[#2A3B28] shadow-md"

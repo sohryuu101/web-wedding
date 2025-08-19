@@ -183,20 +183,84 @@ export function ModernEleganceTemplate({
         </div>
       )}
 
-      {/* Fixed Background Hero Section - 2/3 width */}
-      <div className="fixed inset-0 w-2/3 h-full">
-        <ModernEleganceHeroSection
-          brideName={invitation.bride_name}
-          groomName={invitation.groom_name}
-          weddingDate={invitation.wedding_date}
-          venue={invitation.venue}
-        />
+      {/* Desktop Layout */}
+      <div className="hidden md:block">
+        {/* Fixed Background Hero Section - 2/3 width */}
+        <div className="fixed inset-0 w-2/3 h-full">
+          <ModernEleganceHeroSection
+            brideName={invitation.bride_name}
+            groomName={invitation.groom_name}
+            weddingDate={invitation.wedding_date}
+            venue={invitation.venue}
+          />
+        </div>
+
+        {/* Scrollable Content Container - 1/3 width on the right */}
+        <div className="ml-auto w-1/3 relative z-10 min-h-screen overflow-y-auto">
+          {/* Groom Profile Section - First section */}
+          <div className="relative bg-white">
+            <ModernEleganceGroomProfileSection
+              name={invitation.groom_name}
+              photo={invitation.groom_photo}
+              parents={invitation.groom_parents || { father: '', mother: '' }}
+              socialMedia={invitation.groom_social_media}
+              birthOrder={invitation.groom_birth_order}
+            />
+          </div>
+
+          {/* All other sections in scrollable container */}
+          <div className="relative bg-white">
+            {/* Bride Profile Section */}
+            <ModernEleganceBrideProfileSection
+              name={invitation.bride_name}
+              photo={invitation.bride_photo}
+              parents={invitation.bride_parents || { father: '', mother: '' }}
+              socialMedia={invitation.bride_social_media}
+              birthOrder={invitation.bride_birth_order}
+            />
+
+            {/* Our Journey Section */}
+            <ModernEleganceOurJourneySection />
+
+            {/* Reception Section */}
+            <ReceptionSection />
+
+            {/* Date Countdown Section */}
+            <div className="relative bg-white">
+              <DateCountdown weddingDate={invitation.wedding_date} />
+            </div>
+
+            {/* Event Details Section */}
+            {invitation.event_details && (
+              <EventDetailsSection
+                eventDetails={invitation.event_details}
+              />
+            )}
+
+            {/* Modern Elegance RSVP Section */}
+            <ModernEleganceRSVP
+              onRSVP={handleModernEleganceRSVP}
+              weddingDate={invitation.wedding_date}
+            />
+          </div>
+        </div>
       </div>
 
-      {/* Scrollable Content Container - 1/3 width on the right */}
-      <div className="ml-auto w-1/3 relative z-10 min-h-screen overflow-y-auto">
-        {/* Groom Profile Section - First section */}
+      {/* Mobile Layout */}
+      <div className="block md:hidden">
+        {/* Hero Section at the top on mobile */}
+        <div className="relative">
+          <ModernEleganceHeroSection
+            brideName={invitation.bride_name}
+            groomName={invitation.groom_name}
+            weddingDate={invitation.wedding_date}
+            venue={invitation.venue}
+          />
+        </div>
+
+        {/* All other sections stacked vertically */}
         <div className="relative bg-white">
+          {/* Groom Profile Section */}
           <ModernEleganceGroomProfileSection
             name={invitation.groom_name}
             photo={invitation.groom_photo}
@@ -204,10 +268,7 @@ export function ModernEleganceTemplate({
             socialMedia={invitation.groom_social_media}
             birthOrder={invitation.groom_birth_order}
           />
-        </div>
 
-        {/* All other sections in scrollable container */}
-        <div className="relative bg-white">
           {/* Bride Profile Section */}
           <ModernEleganceBrideProfileSection
             name={invitation.bride_name}
@@ -240,7 +301,6 @@ export function ModernEleganceTemplate({
             onRSVP={handleModernEleganceRSVP}
             weddingDate={invitation.wedding_date}
           />
-
         </div>
       </div>
     </div>

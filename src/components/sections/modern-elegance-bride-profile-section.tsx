@@ -55,6 +55,23 @@ export function ModernEleganceBrideProfileSection({
       `}</style>
 
       <section ref={ref} className="w-full min-h-screen bg-[#F3DBB9] relative overflow-hidden flex flex-col items-center justify-center p-8">
+
+                    {/* Decorative flowers */}
+            <div className="absolute" style={{ left: '-40px', top: '500px' }}>
+              <img
+                src="../public/flower3.png"
+                alt=""
+                className="w-[300px] h-[180px] object-cover"
+              />
+            </div>
+            <div className="absolute" style={{ right: '-10px', top: '500px' }}>
+              <img
+                src="../public/flower4.png"
+                alt=""
+                className="w-[300px] h-[180px] object-cover"
+              />
+            </div>
+
         {/* Bride Name Typography */}
         <div className="relative text-center">
           {/* First Name */}
@@ -113,24 +130,6 @@ export function ModernEleganceBrideProfileSection({
                   </span>
                 </div>
               )}
-            </div>
-
-            {/* Decorative flowers */}
-            <div className="absolute" style={{ left: '0px', top: '200px' }}>
-              <img
-                src="https://api.builder.io/api/v1/image/assets/TEMP/d3811636177a18cb1ccb7370a8fb5b717f5440e5?width=654"
-                alt=""
-                className="w-[327px] h-[184px] object-cover"
-                style={{ transform: 'rotate(38.431deg)' }}
-              />
-            </div>
-            <div className="absolute" style={{ left: '210px', top: '200px' }}>
-              <img
-                src="https://api.builder.io/api/v1/image/assets/TEMP/9f67735511a6452b22882fac3bd07514fc99b90b?width=654"
-                alt=""
-                className="w-[327px] h-[184px] object-cover"
-                style={{ transform: 'rotate(-141.569deg)' }}
-              />
             </div>
           </div>
         </motion.div>

@@ -35,13 +35,40 @@ export function ModernEleganceHeroSection({
     }
 
   return (
-    <section ref={ref} className="hero-section flex flex-col items-start font-normal text-center max-sm:pr-5">
+    <section ref={ref} className="hero-section flex flex-col items-start font-normal text-center relative min-h-dvh">
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={inView ? { opacity: 1, y: 0 } : {}}
         transition={{ duration: 0.8 }}
-        className="garden-hero-container bg-[#3e513c] flex w-full max-w-[966px] flex-col items-center px-20 pt-[75px] pb-60 max-sm:px-5 max-sm:pb-24"
+        className="garden-hero-container min-h-dvh bg-[#3e513c] flex w-full flex-col items-center px-20 pt-[12px] pb-36 max-sm:px-5 max-sm:pb-24 relative overflow-hidden"
       >
+        {/* Decorative flowers */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 1, delay: 1.2 }}
+          className="absolute top-0 right-0 max-sm:top-8 max-sm:right-4"
+        >
+          <img
+            src="../public/flower1.png"
+            alt=""
+            className="w-[400px] h-[270px] object-cover max-sm:w-20 max-sm:h-12"
+          />
+        </motion.div>
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={inView ? { opacity: 1, scale: 1 } : {}}
+          transition={{ duration: 1, delay: 1.4 }}
+          className="absolute bottom-20 left-0 max-sm:bottom-12 max-sm:left-4"
+        >
+          <img
+            src="../public/flower2.png"
+            alt=""
+            className="w-[400px] h-[200px] object-cover max-sm:w-18 max-sm:h-10"
+          />
+        </motion.div>
+        
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={inView ? { opacity: 1, scale: 1 } : {}}
@@ -92,7 +119,7 @@ export function ModernEleganceHeroSection({
             <div className="celebration-text text-[#b4b49f] tracking-[0.48px] mt-[78px] max-sm:mt-10">
               are celebrating their wedding on
             </div>
-            <div className="date-venue-container self-end flex items-stretch gap-6 text-[#f3dbb9] tracking-[1.92px] mt-8 mr-6 max-sm:mr-2">
+            <div className="date-venue-container self-end flex items-stretch gap-6 text-[#f3dbb9] tracking-[1.92px] mt-8 mb-24 mr-6 max-sm:mr-2 max-sm:mb-12">
               <div className="wedding-date my-auto">
                 {formatDate(weddingDate)}
               </div>

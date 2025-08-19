@@ -124,10 +124,10 @@ export function DateCountdown({ weddingDate }: DateCountdownProps) {
             </div>
           </motion.div>
           
-          {/* Dynamic Wedding Date Text - Styled to match static image */}
-          <div className="w-full flex flex-col items-center justify-center mt-8 mb-4">
+          {/* Dynamic Wedding Date Text - Positioned above decorative element */}
+          <div className="w-full flex flex-col items-center justify-center mt-32">
             <span
-              className="block text-[2rem] md:text-[1rem] font-serif font-bold tracking-[0.18em] text-[#3E513C] uppercase"
+              className="block text-[2rem] md:text-[1.5rem] font-bold tracking-[0.18em] text-[#3E513C] uppercase text-center"
               style={{ letterSpacing: '0.18em', fontFamily: 'Bodoni MT, serif' }}
             >
               {new Date(weddingDate).toLocaleDateString('en-US', {
@@ -138,14 +138,15 @@ export function DateCountdown({ weddingDate }: DateCountdownProps) {
               }).toUpperCase()}
             </span>
           </div>
+          
           {/* Bottom Decorative Element */}
           <motion.img
             initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            src="https://api.builder.io/api/v1/image/assets/TEMP/0f9d12a2-39fa-4bda-a51a-162e8cb23772?placeholderIfAbsent=true"
+            src="../public/flower5.png"
             alt="Decorative bottom element"
-            className="aspect-[1.63] object-contain object-center w-full self-stretch mt-[115px]"
+            className="aspect-[1.63] object-contain object-center w-full self-stretch mt-0"
           />
         </motion.div>
       </section>
