@@ -79,13 +79,13 @@ export function RSVPSection({
           className="text-center mb-12"
         >
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Heart className="h-6 w-6 text-pink-500" />
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif">
+            <Heart className="h-6 w-6 text-[color:var(--primary)]" />
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif" style={{ fontFamily: 'Bodoni Moda, serif' }}>
               {title}
             </h2>
-            <Heart className="h-6 w-6 text-pink-500" />
+            <Heart className="h-6 w-6 text-[color:var(--primary)]" />
           </div>
-          <p className="text-lg text-gray-600">{subtitle}</p>
+          <p className="text-lg text-gray-600" style={{ fontFamily: 'Cardo, serif' }}>{subtitle}</p>
         </motion.div>
 
         <motion.div
@@ -112,7 +112,7 @@ export function RSVPSection({
                 <Button
                   type="button"
                   variant={attendance === "hadir" ? "default" : "outline"}
-                  className={attendance === "hadir" ? "bg-pink-600 hover:bg-pink-700" : ""}
+                  className={attendance === "hadir" ? "bg-[color:var(--primary)] hover:brightness-110" : ""}
                   onClick={() => setAttendance("hadir")}
                 >
                   <Check className="h-4 w-4 mr-2" />
@@ -170,7 +170,7 @@ export function RSVPSection({
 
             <Button
               type="submit"
-              className="w-full bg-pink-600 hover:bg-pink-700"
+              className="w-full bg-[color:var(--primary)] hover:brightness-110"
               disabled={isSubmitting}
             >
               {isSubmitting ? (

@@ -68,7 +68,7 @@ export function PhotoGallerySection({
           backgroundImage: `url(${photos[currentIndex]?.src || '/placeholder.svg'})`,
         }}
       />
-      <div className="absolute inset-0 bg-black/60" />
+      <div className="absolute inset-0" style={{ backgroundColor: 'color-mix(in oklab, var(--primary) 60%, black 40%)', opacity: 0.6 }} />
       
       <div className="relative z-10 min-h-screen flex flex-col justify-between p-8">
         {/* Header */}
@@ -78,7 +78,7 @@ export function PhotoGallerySection({
           transition={{ duration: 0.8 }}
           className="text-center pt-16"
         >
-          <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-white mb-4 font-light tracking-wider">
+          <h2 className="text-6xl md:text-8xl lg:text-9xl font-serif text-white mb-4 font-light tracking-wider" style={{ fontFamily: 'Bodoni Moda, serif' }}>
             {title}
           </h2>
         </motion.div>

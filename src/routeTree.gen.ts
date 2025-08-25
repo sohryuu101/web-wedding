@@ -8,62 +8,146 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as SetupRouteImport } from './routes/setup'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DemoRouteImport } from './routes/demo'
-import { Route as ContactRouteImport } from './routes/contact'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
-import { Route as InvitationSlugRouteImport } from './routes/invitation/$slug'
-import { Route as DashboardEditRouteImport } from './routes/dashboard/edit'
+// Import Routes
 
-const SetupRoute = SetupRouteImport.update({
+import { Route as rootRoute } from './routes/__root'
+import { Route as SetupImport } from './routes/setup'
+import { Route as LoginImport } from './routes/login'
+import { Route as DemoImport } from './routes/demo'
+import { Route as ContactImport } from './routes/contact'
+import { Route as AboutImport } from './routes/about'
+import { Route as IndexImport } from './routes/index'
+import { Route as DashboardIndexImport } from './routes/dashboard/index'
+import { Route as InvitationSlugImport } from './routes/invitation/$slug'
+import { Route as DashboardEditImport } from './routes/dashboard/edit'
+
+// Create/Update Routes
+
+const SetupRoute = SetupImport.update({
   id: '/setup',
   path: '/setup',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const LoginRoute = LoginRouteImport.update({
+
+const LoginRoute = LoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const DemoRoute = DemoRouteImport.update({
+
+const DemoRoute = DemoImport.update({
   id: '/demo',
   path: '/demo',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const ContactRoute = ContactRouteImport.update({
+
+const ContactRoute = ContactImport.update({
   id: '/contact',
   path: '/contact',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const AboutRoute = AboutRouteImport.update({
+
+const AboutRoute = AboutImport.update({
   id: '/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+
+const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const DashboardIndexRoute = DashboardIndexRouteImport.update({
+
+const DashboardIndexRoute = DashboardIndexImport.update({
   id: '/dashboard/',
   path: '/dashboard/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const InvitationSlugRoute = InvitationSlugRouteImport.update({
+
+const InvitationSlugRoute = InvitationSlugImport.update({
   id: '/invitation/$slug',
   path: '/invitation/$slug',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
-const DashboardEditRoute = DashboardEditRouteImport.update({
+
+const DashboardEditRoute = DashboardEditImport.update({
   id: '/dashboard/edit',
   path: '/dashboard/edit',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => rootRoute,
 } as any)
+
+// Populate the FileRoutesByPath interface
+
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexImport
+      parentRoute: typeof rootRoute
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutImport
+      parentRoute: typeof rootRoute
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactImport
+      parentRoute: typeof rootRoute
+    }
+    '/demo': {
+      id: '/demo'
+      path: '/demo'
+      fullPath: '/demo'
+      preLoaderRoute: typeof DemoImport
+      parentRoute: typeof rootRoute
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/setup': {
+      id: '/setup'
+      path: '/setup'
+      fullPath: '/setup'
+      preLoaderRoute: typeof SetupImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/edit': {
+      id: '/dashboard/edit'
+      path: '/dashboard/edit'
+      fullPath: '/dashboard/edit'
+      preLoaderRoute: typeof DashboardEditImport
+      parentRoute: typeof rootRoute
+    }
+    '/invitation/$slug': {
+      id: '/invitation/$slug'
+      path: '/invitation/$slug'
+      fullPath: '/invitation/$slug'
+      preLoaderRoute: typeof InvitationSlugImport
+      parentRoute: typeof rootRoute
+    }
+    '/dashboard/': {
+      id: '/dashboard/'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardIndexImport
+      parentRoute: typeof rootRoute
+    }
+  }
+}
+
+// Create and export the route tree
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -76,6 +160,7 @@ export interface FileRoutesByFullPath {
   '/invitation/$slug': typeof InvitationSlugRoute
   '/dashboard': typeof DashboardIndexRoute
 }
+
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
@@ -87,8 +172,9 @@ export interface FileRoutesByTo {
   '/invitation/$slug': typeof InvitationSlugRoute
   '/dashboard': typeof DashboardIndexRoute
 }
+
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
+  __root__: typeof rootRoute
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
@@ -99,6 +185,7 @@ export interface FileRoutesById {
   '/invitation/$slug': typeof InvitationSlugRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
+
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
@@ -135,6 +222,7 @@ export interface FileRouteTypes {
     | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
+
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
@@ -145,74 +233,6 @@ export interface RootRouteChildren {
   DashboardEditRoute: typeof DashboardEditRoute
   InvitationSlugRoute: typeof InvitationSlugRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
-}
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/setup': {
-      id: '/setup'
-      path: '/setup'
-      fullPath: '/setup'
-      preLoaderRoute: typeof SetupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo': {
-      id: '/demo'
-      path: '/demo'
-      fullPath: '/demo'
-      preLoaderRoute: typeof DemoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/contact': {
-      id: '/contact'
-      path: '/contact'
-      fullPath: '/contact'
-      preLoaderRoute: typeof ContactRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/': {
-      id: '/dashboard/'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/invitation/$slug': {
-      id: '/invitation/$slug'
-      path: '/invitation/$slug'
-      fullPath: '/invitation/$slug'
-      preLoaderRoute: typeof InvitationSlugRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard/edit': {
-      id: '/dashboard/edit'
-      path: '/dashboard/edit'
-      fullPath: '/dashboard/edit'
-      preLoaderRoute: typeof DashboardEditRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-  }
 }
 
 const rootRouteChildren: RootRouteChildren = {
@@ -226,6 +246,55 @@ const rootRouteChildren: RootRouteChildren = {
   InvitationSlugRoute: InvitationSlugRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
-export const routeTree = rootRouteImport
+
+export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+/* ROUTE_MANIFEST_START
+{
+  "routes": {
+    "__root__": {
+      "filePath": "__root.tsx",
+      "children": [
+        "/",
+        "/about",
+        "/contact",
+        "/demo",
+        "/login",
+        "/setup",
+        "/dashboard/edit",
+        "/invitation/$slug",
+        "/dashboard/"
+      ]
+    },
+    "/": {
+      "filePath": "index.tsx"
+    },
+    "/about": {
+      "filePath": "about.tsx"
+    },
+    "/contact": {
+      "filePath": "contact.tsx"
+    },
+    "/demo": {
+      "filePath": "demo.tsx"
+    },
+    "/login": {
+      "filePath": "login.tsx"
+    },
+    "/setup": {
+      "filePath": "setup.tsx"
+    },
+    "/dashboard/edit": {
+      "filePath": "dashboard/edit.tsx"
+    },
+    "/invitation/$slug": {
+      "filePath": "invitation/$slug.tsx"
+    },
+    "/dashboard/": {
+      "filePath": "dashboard/index.tsx"
+    }
+  }
+}
+ROUTE_MANIFEST_END */

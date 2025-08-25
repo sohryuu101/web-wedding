@@ -30,7 +30,7 @@ export function FinalSection({
   })
 
   return (
-    <section ref={ref} className="min-h-screen bg-black text-white relative overflow-hidden">
+    <section ref={ref} className="min-h-screen text-white relative overflow-hidden">
       {/* Background Image with grayscale filter */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat filter grayscale"
@@ -38,7 +38,7 @@ export function FinalSection({
           backgroundImage: `url(${backgroundImage || '/placeholder.svg'})`,
         }}
       />
-      <div className="absolute inset-0 bg-black/70" />
+      <div className="absolute inset-0" style={{ backgroundColor: 'color-mix(in oklab, var(--primary) 65%, black 35%)', opacity: 0.75 }} />
       
       <div className="relative z-10 min-h-screen flex flex-col justify-between p-8">
         {/* Main Content */}
@@ -51,13 +51,13 @@ export function FinalSection({
           >
             {/* Main Title */}
             <div className="space-y-4">
-              <h2 className="text-2xl md:text-3xl font-serif text-white/90 font-light tracking-wider">
+              <h2 className="text-2xl md:text-3xl text-white/90 font-light tracking-wider" style={{ fontFamily: 'Bodoni Moda, serif' }}>
                 The Wedding Of
               </h2>
-              <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white font-light">
+              <h1 className="text-5xl md:text-7xl lg:text-8xl text-white font-light" style={{ fontFamily: 'Great Vibes, cursive' }}>
                 {brideName} & {groomName}
               </h1>
-              <p className="text-xl md:text-2xl font-serif text-white/90 font-light tracking-wide">
+              <p className="text-xl md:text-2xl text-white/90 font-light tracking-wide" style={{ fontFamily: 'Playfair Display, serif' }}>
                 {new Date(weddingDate).toLocaleDateString('en-US', {
                   weekday: 'long',
                   year: 'numeric',

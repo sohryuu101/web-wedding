@@ -10,7 +10,7 @@ export const sampleWeddingData: InvitationData = {
   main_title: "PERNIKAHAN",
   subtitle: "Calvin & Nabila",
   message: "Dengan penuh kebahagiaan, kami mengundang Anda untuk merayakan hari istimewa kami. Kehadiran Anda sangat berarti bagi kami saat kami memulai perjalanan indah ini bersama.",
-  theme: "Taman Mawar",
+  theme: "Modern Elegance",
   cover_image: "https://images.unsplash.com/photo-1519741497674-611481863552?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80",
   is_published: true,
   views: 1250,
