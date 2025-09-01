@@ -68,7 +68,7 @@ export function HeroSection({
   const { days, hours, minutes, seconds } = countdown
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden bg-black">
+    <section className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
       {/* Background Image with grayscale filter */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat filter grayscale"
@@ -78,7 +78,10 @@ export function HeroSection({
       />
       
       {/* Dark Overlay */}
-      <div className="absolute inset-0 bg-black/70" />
+      <div
+        className="absolute inset-0"
+        style={{ backgroundColor: 'color-mix(in oklab, var(--primary) 65%, black 35%)', opacity: 0.75 }}
+      />
       
       {/* Main Content */}
       <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto flex-1 flex flex-col justify-center">
@@ -89,16 +92,16 @@ export function HeroSection({
           transition={{ duration: 0.8 }}
           className="mb-8"
         >
-          <h1 className="text-2xl md:text-3xl font-serif text-white/90 mb-8 font-light tracking-wider">
+          <h1 className="text-2xl md:text-3xl text-white/90 mb-8 font-light tracking-wider" style={{ fontFamily: 'Bodoni Moda, serif' }}>
             The Wedding Of
           </h1>
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-4 font-light">
+          <h2 className="text-5xl md:text-7xl lg:text-8xl text-white mb-4 font-light" style={{ fontFamily: 'Great Vibes, cursive' }}>
             {brideName} &
           </h2>
-          <h2 className="text-5xl md:text-7xl lg:text-8xl font-serif text-white mb-12 font-light">
+          <h2 className="text-5xl md:text-7xl lg:text-8xl text-white mb-12 font-light" style={{ fontFamily: 'Great Vibes, cursive' }}>
             {groomName}
           </h2>
-          <p className="text-xl md:text-2xl font-serif text-white/90 font-light tracking-wide">
+          <p className="text-xl md:text-2xl text-white/90 font-light tracking-wide" style={{ fontFamily: 'Playfair Display, serif' }}>
             {new Date(weddingDate).toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',

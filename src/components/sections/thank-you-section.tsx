@@ -30,11 +30,11 @@ export function ThankYouSection({
           className="text-center mb-16"
         >
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <Heart className="h-6 w-6 text-pink-500" />
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif">
+            <Heart className="h-6 w-6 text-[color:var(--primary)]" />
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 font-serif" style={{ fontFamily: 'Bodoni Moda, serif' }}>
               TERIMA KASIH
             </h2>
-            <Heart className="h-6 w-6 text-pink-500" />
+            <Heart className="h-6 w-6 text-[color:var(--primary)]" />
           </div>
         </motion.div>
 
@@ -66,11 +66,11 @@ export function ThankYouSection({
               )}
             </div>
 
-            <p className="text-xl md:text-2xl font-semibold text-gray-900 mb-4">
+            <p className="text-xl md:text-2xl font-semibold text-gray-900 mb-4" style={{ fontFamily: 'Playfair Display, serif' }}>
               {coupleNames}
             </p>
 
-            <p className="text-gray-600 leading-relaxed">
+            <p className="text-gray-600 leading-relaxed" style={{ fontFamily: 'Cardo, serif' }}>
               {thankYouMessage}
             </p>
           </div>

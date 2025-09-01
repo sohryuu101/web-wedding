@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
 import { HeroSection } from "./sections/hero-section"
 import { ThankYouSection } from "./sections/thank-you-section"
 import { CoupleProfilesSection } from "./sections/couple-profiles-section"
@@ -179,8 +180,10 @@ export function WeddingInvitationTemplate({
     }
   }
 
+  const themeClass = invitation.theme?.toLowerCase().includes("modern elegance") ? "theme-modern-elegance" : undefined
+
   return (
-    <div className="min-h-screen">
+    <div className={cn("min-h-screen", themeClass)}>
       {/* Preview Badge */}
       {isPreview && (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50">
