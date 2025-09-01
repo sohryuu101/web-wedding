@@ -25,7 +25,7 @@ export function ReceptionSection() {
           {/* Main Header with Background Image */}
           <div className="flex flex-col self-stretch relative aspect-[1.673] text-[36px] tracking-[1.08px] pt-[184px] pb-9 px-[49px]">
             <img
-              src="https://api.builder.io/api/v1/image/assets/TEMP/d8141fa9a9bd1ade56bd3ed74a87cbeff700dbfa?placeholderIfAbsent=true"
+              src="/flower5.png"
               alt=""
               className="absolute inset-0 h-full w-full object-cover"
             />

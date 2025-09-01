@@ -50,7 +50,7 @@ export function ModernEleganceHeroSection({
           className="absolute top-0 right-0 max-sm:top-8 max-sm:right-4"
         >
           <img
-            src="../public/flower1.png"
+            src="/flower1.png"
             alt=""
             className="w-[400px] h-[270px] object-cover max-sm:w-20 max-sm:h-12"
           />
@@ -63,7 +63,7 @@ export function ModernEleganceHeroSection({
           className="absolute bottom-20 left-0 max-sm:bottom-12 max-sm:left-4"
         >
           <img
-            src="../public/flower2.png"
+            src="/flower2.png"
             alt=""
             className="w-[400px] h-[200px] object-cover max-sm:w-18 max-sm:h-10"
           />

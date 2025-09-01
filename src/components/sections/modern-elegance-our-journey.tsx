@@ -22,7 +22,7 @@ export function ModernEleganceOurJourneySection() {
           className="flex max-w-[480px] w-full flex-col items-center text-[36px] text-[#3E513C] font-normal text-center mx-auto"
         >
           <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/7468a0dd563a8c1e48c9212143b200e9f791a5a1?placeholderIfAbsent=true"
+            src="/our-journey-flower.png"
             alt="Decorative element"
             className="aspect-[1.78] object-contain object-center w-[205px] max-w-full"
           />

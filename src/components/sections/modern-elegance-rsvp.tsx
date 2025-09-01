@@ -75,7 +75,7 @@ export function ModernEleganceRSVP({
             initial={{ opacity: 0, y: -30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8 }}
-            src="https://api.builder.io/api/v1/image/assets/TEMP/e29abaa5ab6710bd6d48001211d486c97f67e01a?width=502"
+            src="/our-journey-flower.png"
             alt="Decorative flourish"
             className="decorative-image w-[251px] h-[141px] flex-shrink-0 absolute left-[58px] top-0 object-contain"
             style={{ aspectRatio: '162/91' }}

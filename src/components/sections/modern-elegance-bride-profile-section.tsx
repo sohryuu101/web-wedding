@@ -59,14 +59,14 @@ export function ModernEleganceBrideProfileSection({
                     {/* Decorative flowers */}
             <div className="absolute" style={{ left: '-40px', top: '500px' }}>
               <img
-                src="../public/flower3.png"
+                src="/flower3.png"
                 alt=""
                 className="w-[300px] h-[180px] object-cover"
               />
             </div>
             <div className="absolute" style={{ right: '-10px', top: '500px' }}>
               <img
-                src="../public/flower4.png"
+                src="/flower4.png"
                 alt=""
                 className="w-[300px] h-[180px] object-cover"
               />

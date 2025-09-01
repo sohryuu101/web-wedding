@@ -66,7 +66,7 @@ export function DateCountdown({ weddingDate }: DateCountdownProps) {
         >
           {/* Decorative Element */}
           <img
-            src="https://api.builder.io/api/v1/image/assets/TEMP/19f4b7c3f92f8bc2e9bee87f4778c43e0ddaf077?placeholderIfAbsent=true"
+            src="/flower-save-the-date.png"
             alt="Decorative element"
             className="aspect-[0.97] object-contain object-center w-[116px] max-w-full"
           />
@@ -144,7 +144,7 @@ export function DateCountdown({ weddingDate }: DateCountdownProps) {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={inView ? { opacity: 1, scale: 1 } : {}}
             transition={{ duration: 0.8, delay: 0.4 }}
-            src="../public/flower5.png"
+            src="/flower5.png"
             alt="Decorative bottom element"
             className="aspect-[1.63] object-contain object-center w-full self-stretch mt-0"
           />
