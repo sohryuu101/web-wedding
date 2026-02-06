@@ -8,11 +8,16 @@ import './index.css'
 // Import the generated route tree
 import { routeTree } from './routeTree.gen'
 
-// Create a new router instance with explicit basename for GitHub Pages
-const router = createRouter({ 
-  routeTree,
-  basename: import.meta.env.BASE_URL,
-})
+// Handle 404 redirect from GitHub Pages
+if (sessionStorage.redirect) {
+  let redirect = sessionStorage.redirect;
+  delete sessionStorage.redirect;
+  // Navigate to the preserved path
+  window.history.replaceState(null, '', redirect);
+}
+
+// Create a new router instance
+const router = createRouter({ routeTree })
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
