@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting...</title>
+  <script>
+    var segment = 1;
+    sessionStorage.redirect = '/' + location.pathname.slice(1).split('/').slice(segment).join('/');
+    location.replace('/web-wedding/?redirect');
+  </script>
+</head>
+<body>
+</body>
+</html>
+
+
