@@ -20,6 +20,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Function to check auth state
   const checkAuthState = async () => {
+    // For static hosting (GitHub Pages), skip auth check if API is not available
+    const isStaticHost = window.location.hostname.includes('github.io');
+    
+    if (isStaticHost) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+    
     if (apiClient.isAuthenticated()) {
       try {
         const response = await apiClient.getCurrentUser();
@@ -50,11 +59,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const login = async (email: string, password: string) => {
+    const isStaticHost = window.location.hostname.includes('github.io');
+    if (isStaticHost) {
+      throw new Error('Authentication is not available on static hosting. Please visit the demo page.');
+    }
     const response = await apiClient.login(email, password);
     setUser(response.user);
   };
 
   const register = async (email: string, password: string, name: string) => {
+    const isStaticHost = window.location.hostname.includes('github.io');
+    if (isStaticHost) {
+      throw new Error('Registration is not available on static hosting. Please visit the demo page.');
+    }
     const response = await apiClient.register(email, password, name);
     setUser(response.user);
   };

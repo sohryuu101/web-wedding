@@ -1,4 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useEffect } from 'react'
 import { GalleryVerticalEnd } from "lucide-react"
 import { LoginForm } from "@/components/login-form"
 
@@ -8,6 +9,16 @@ export const Route = createFileRoute('/')({
 })
 
 function RouteComponent() {
+  const navigate = useNavigate()
+  
+  useEffect(() => {
+    // On static hosting, redirect to demo page
+    const isStaticHost = window.location.hostname.includes('github.io')
+    if (isStaticHost) {
+      navigate({ to: '/demo' })
+    }
+  }, [navigate])
+  
     return (
         <div className="grid min-h-svh lg:grid-cols-2">
           <div className="flex flex-col gap-4 p-6 md:p-10">
