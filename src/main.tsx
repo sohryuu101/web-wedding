@@ -17,7 +17,11 @@ if (sessionStorage.redirect) {
 }
 
 // Create a new router instance
-const router = createRouter({ routeTree })
+const router = createRouter({
+  routeTree,
+  // Set base path for GitHub Pages subdirectory deployment
+  basepath: '/web-wedding',
+})
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
